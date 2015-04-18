@@ -15,6 +15,8 @@ class Battle extends Sprite {
 
 	public var field:TextField;
 	public var soldiers:Array<Soldier>;
+	public var axisSoldiers:Array<Soldier>;
+	public var alliesSoldiers:Array<Soldier>;
 	public var turn:Int = 0;
 
 	private var ai:AI;
@@ -29,17 +31,21 @@ class Battle extends Sprite {
 
 		// setup battlefield
 		soldiers = new Array<Soldier>();
+		axisSoldiers = new Array<Soldier>();
+		alliesSoldiers = new Array<Soldier>();
 		var soldierNames = NameGenerator.getNames(4);
 
 		for(i in 0...4){
 			var soldier = new Soldier(0, soldierNames[i], 600 + Std.int(Math.random()*100), 100*i+80);
 			soldiers.push(soldier);
+			alliesSoldiers.push(soldier);
 			addChild(soldier);
 		}
 
 		for(i in 0...4){
 			var soldier = new Soldier(1, "Enemy Soldier", 80 + Std.int(Math.random()*100), 100*i+80);
 			soldiers.push(soldier);
+			axisSoldiers.push(soldier);
 			addChild(soldier);
 		}
 

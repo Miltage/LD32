@@ -16,6 +16,7 @@ class Soldier extends Sprite {
 	public var lastName:String;
 
 	private var healthBar:Sprite;
+	private var nameField:TextField;
 
 	public function new(alignment:Int, name:String, x:Int, y:Int){
 		super();
@@ -34,7 +35,7 @@ class Soldier extends Sprite {
 		format.align = TextFormatAlign.CENTER;
 		format.color = 0xffffff;
 
-		var nameField = new TextField();
+		nameField = new TextField();
 		nameField.defaultTextFormat = format;
 		nameField.text = name;
 		nameField.selectable = false;
@@ -57,6 +58,14 @@ class Soldier extends Sprite {
 	}
 
 	public function update(){
-		healthBar.width = HEALTHBAR_WIDTH*(maxHealth/health);
+		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
+	}
+
+	public function takeDamage(amount){
+		health -= amount;
+		if(health <= 0){
+			health = 0;
+			trace("Soldier died");
+		}
 	}
 }

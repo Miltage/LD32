@@ -7,12 +7,15 @@ import openfl.text.Font;
 import openfl.text.TextFormat;
 import openfl.events.TextEvent;
 import openfl.Lib;
+import openfl.events.Event;
 
 @:font("assets/TravelingTypewriter.ttf") class DefaultFont extends Font {}
 
 class Battle extends Sprite {
 
 	public var field:TextField;
+	public var soldiers:Array<Soldier>;
+	public var turn:Int = 0;
 
 	public function new(){
 		super();
@@ -35,6 +38,12 @@ class Battle extends Sprite {
 		Lib.current.stage.focus = field;
 
 		field.addEventListener(TextEvent.TEXT_INPUT, handleInput);
+		this.addEventListener(Event.ENTER_FRAME, update);
+
+		// setup battlefield
+		soldiers = new Array<Soldier>();
+		soldiers.push(new Soldier(0));
+		addChild(soldiers[0]);
 	}
 
 	private function handleInput(t:TextEvent){
@@ -45,6 +54,13 @@ class Battle extends Sprite {
 			var r = ~/[\r|\n]+/gi;
 			sentence = r.replace(sentence, " ");
 			SentenceParser.parse(sentence);
+
+			turn = 1;
+			field.type = TextFieldType.DYNAMIC;
 		}
+	}
+
+	private function update(e:Event){
+
 	}
 }

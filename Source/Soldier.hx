@@ -21,6 +21,7 @@ class Soldier extends Sprite {
 		super();
 
 		this.alignment = alignment;
+		this.lastName = name;
 		this.x = x;
 		this.y = y;
 		health = maxHealth = 10;

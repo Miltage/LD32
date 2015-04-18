@@ -5,7 +5,6 @@ import commands.*;
 class AI {
 
 	public var command:Command;
-	public var commandText:String;
 	
 	private var battle:Battle;
 
@@ -18,16 +17,11 @@ class AI {
 		var subject = battle.getRandomAxisSoldier();
 		var target = battle.getRandomAlliedSoldier();
 		command = new ShootCommand(subject, target);
-		commandText = "Enemy soldier shoots.";
+
+		battle.transcript += "Enemy soldier shoots at "+target.lastName+".";
 	}
 
 	public function runCommand(){
 		command.perform();
-	}
-
-	public function getNextCharacter(){
-		var c = commandText.substr(0, 1);
-		commandText = commandText.substr(1);
-		return c;
 	}
 }

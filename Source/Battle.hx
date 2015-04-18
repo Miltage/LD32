@@ -19,6 +19,8 @@ class Battle extends Sprite {
 	public var alliesSoldiers:Array<Soldier>;
 	public var turn:Int = 0;
 
+	public var transcript:String;
+
 	private var ai:AI;
 
 	public function new(){
@@ -26,6 +28,7 @@ class Battle extends Sprite {
 
 		Font.registerFont (DefaultFont);
 		ai = new AI(this);
+		transcript = "";
 
 		var format = new TextFormat ("Traveling _Typewriter", 18, 0x111);
 
@@ -71,8 +74,10 @@ class Battle extends Sprite {
 			// End player turn
 			if(parseLastSentence()){
 				turn = 1;
+				transcript = field.text + t.text + " ";
 				field.text += " ";
 				field.type = TextFieldType.DYNAMIC;
+
 				if(anyAxisAlive())
 					ai.takeTurn();
 				else
@@ -95,17 +100,17 @@ class Battle extends Sprite {
 			soldier.update();
 		}
 
-		// Enemy turn
-		if(turn == 1 && ai.commandText.length > 0){
-			field.text += ai.getNextCharacter();
+		if(transcript.length > field.text.length){
+			field.text += transcript.charAt(field.text.length);
 			field.setSelection(field.text.length, field.text.length);
 		}
+
 		// End enemy turn
-		else if(turn == 1){
+		if(turn == 1 && transcript.length == field.text.length){
 			ai.runCommand();
 			if(anyAlliedAlive()){
 				turn = 0;
-				field.text += " ";
+				transcript = field.text += " ";
 				field.type = TextFieldType.INPUT;
 				field.setSelection(field.text.length, field.text.length);
 				Lib.current.stage.focus = field;

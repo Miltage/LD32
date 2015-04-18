@@ -10,6 +10,7 @@ class SentenceParser {
 
 		var subject:Soldier = null;
 		var target:Soldier = null;
+		var command:Command = null;
 
 		// Get subject of sentence
 		for(soldier in battle.soldiers){
@@ -17,17 +18,21 @@ class SentenceParser {
 				subject = soldier;
 		}
 
-		var action:String = parts[1];
+		if(subject != null){
+			var action:String = parts[1];
 
-		if(target == null){
-			target = battle.axisSoldiers[Std.int(Math.random()*(battle.axisSoldiers.length))];
-		}
+			if(target == null){
+				target = battle.getRandomAxisSoldier();
+			}
 
-		switch(action){
-			case "fires": new ShootCommand(subject, target);
-			case "shoots": new ShootCommand(subject, target);
-		}
+			switch(action){
+				case "fires": command = new ShootCommand(subject, target);
+				case "shoots": command = new ShootCommand(subject, target);
+			}
 
-		return subject != null;
+			if(command != null) command.perform();
+		}		
+
+		return command != null;
 	}
 }

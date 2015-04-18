@@ -14,6 +14,7 @@ class Soldier extends Sprite {
 	public var maxHealth:Int;
 	public var alignment:Int;
 	public var lastName:String;
+	public var alive:Bool;
 
 	private var healthBar:Sprite;
 	private var nameField:TextField;
@@ -26,6 +27,7 @@ class Soldier extends Sprite {
 		this.x = x;
 		this.y = y;
 		health = maxHealth = 10;
+		alive = true;
 
 		this.graphics.beginFill(alignment>0?0xff3344:0x33cc88);
 		this.graphics.drawRect(0, 0, 30, 60);
@@ -65,6 +67,7 @@ class Soldier extends Sprite {
 		health -= amount;
 		if(health <= 0){
 			health = 0;
+			alive = false;
 			trace("Soldier died");
 		}
 	}

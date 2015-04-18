@@ -68,11 +68,15 @@ class Battle extends Sprite {
 
 	private function handleInput(t:TextEvent){
 		if(t.text == "." || t.text == "?" || t.text == "!"){
+			// End player turn
 			if(parseLastSentence()){
 				turn = 1;
 				field.text += " ";
 				field.type = TextFieldType.DYNAMIC;
-				ai.takeTurn();
+				if(anyAxisAlive())
+					ai.takeTurn();
+				else
+					trace("Player wins!");
 			}
 		}
 	}
@@ -91,15 +95,51 @@ class Battle extends Sprite {
 			soldier.update();
 		}
 
-		if(turn == 1 && ai.command.length > 0){
+		// Enemy turn
+		if(turn == 1 && ai.commandText.length > 0){
 			field.text += ai.getNextCharacter();
 			field.setSelection(field.text.length, field.text.length);
-		}else if(turn == 1){
-			turn = 0;
-			field.text += " ";
-			field.type = TextFieldType.INPUT;
-			field.setSelection(field.text.length, field.text.length);
-			Lib.current.stage.focus = field;
 		}
+		// End enemy turn
+		else if(turn == 1){
+			ai.runCommand();
+			if(anyAlliedAlive()){
+				turn = 0;
+				field.text += " ";
+				field.type = TextFieldType.INPUT;
+				field.setSelection(field.text.length, field.text.length);
+				Lib.current.stage.focus = field;
+			}else{
+				trace("AI wins!");
+			}
+		}
+	}
+
+	// Convenience functions //
+
+	public function getRandomAxisSoldier(){
+		var s = axisSoldiers[Std.int(Math.random()*(axisSoldiers.length))];
+		while(!s.alive)
+			s = axisSoldiers[Std.int(Math.random()*(axisSoldiers.length))];
+		return s;
+	}
+
+	public function getRandomAlliedSoldier(){
+		var s = alliesSoldiers[Std.int(Math.random()*(alliesSoldiers.length))];
+		while(!s.alive)
+			s = alliesSoldiers[Std.int(Math.random()*(alliesSoldiers.length))];
+		return s;
+	}
+
+	public function anyAxisAlive(){
+		for(s in axisSoldiers)
+			if(s.alive) return true;
+		return false;
+	}
+
+	public function anyAlliedAlive(){
+		for(s in alliesSoldiers)
+			if(s.alive) return true;
+		return false;
 	}
 }

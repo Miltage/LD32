@@ -14,11 +14,13 @@ class Soldier extends Sprite {
 
 	public static inline var HEALTHBAR_WIDTH = 60;
 	
-	public var health:Int;
-	public var maxHealth:Int;
+	public var health:Int = 1;
+	public var maxHealth:Int = 1;
 	public var alignment:Int;
 	public var lastName:String;
 	public var alive:Bool;
+
+	public var command:Command;
 
 	private var healthBar:Sprite;
 	private var nameField:TextField;
@@ -33,7 +35,6 @@ class Soldier extends Sprite {
 		this.lastName = name;
 		this.x = x;
 		this.y = y;
-		health = maxHealth = 10;
 		alive = true;
 
 		var format = new TextFormat("Arial");
@@ -69,19 +70,28 @@ class Soldier extends Sprite {
 			body = cast(loader.content, MovieClip);
 			body.x = -45;
 			body.y = -45;
+			if(alignment == 1){
+				body.scaleX = -1;
+				body.x = 75;
+			}
 			addChild(body);
-			body.gotoAndPlay(100);
 		});
 	}
 
 	public function update(){
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
 
-		if(body != null && body.currentFrame == 99){
+		if(body != null && body.currentFrame == 99)
 			body.gotoAndPlay(1);
-		}else if(body != null && body.currentFrame == 131){
+		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay(100);
-		}
+		else if(body != null && body.currentFrame == 155)
+			body.gotoAndPlay(1);
+		else if(body != null && body.currentFrame == 142 && command != null)
+			command.drawEffects();
+		else if(body != null && body.currentFrame == 243)
+			body.stop();
+		
 	}
 
 	public function takeDamage(amount){
@@ -90,6 +100,11 @@ class Soldier extends Sprite {
 			health = 0;
 			alive = false;
 			trace("Soldier died");
+			body.gotoAndPlay(209);
 		}
+	}
+
+	public function gotoAndPlay(frame:Int){
+		body.gotoAndPlay(frame);
 	}
 }

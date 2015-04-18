@@ -17,6 +17,7 @@ class AI {
 		var subject = battle.getRandomAxisSoldier();
 		var target = battle.getRandomAlliedSoldier();
 		command = new ShootCommand(subject, target);
+		subject.command = command;
 
 		battle.transcript += "Enemy soldier shoots at "+target.lastName+".";
 	}

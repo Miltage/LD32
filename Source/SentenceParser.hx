@@ -19,6 +19,11 @@ class SentenceParser {
 		}
 
 		if(subject != null){
+			if(!subject.alive){
+				battle.transcript += "He is dead and thus his actions don't have much effect. ";
+				return false;
+			}
+
 			var action:String = parts[1];
 
 			if(target == null){
@@ -30,7 +35,10 @@ class SentenceParser {
 				case "shoots": command = new ShootCommand(subject, target);
 			}
 
-			if(command != null) command.perform();
+			if(command != null){
+				subject.command = command;
+				command.perform();
+			}
 		}		
 
 		return command != null;

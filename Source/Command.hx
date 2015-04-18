@@ -13,4 +13,8 @@ class Command {
 	public function perform(){
 
 	}
+
+	public function drawEffects(){
+		
+	}
 }

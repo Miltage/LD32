@@ -16,6 +16,9 @@ import openfl.display.MovieClip;
 
 class Battle extends Sprite {
 
+	public static var effects:Sprite;
+	public static var groundEffects:Sprite;
+
 	public var field:TextField;
 	public var soldiers:Array<Soldier>;
 	public var axisSoldiers:Array<Soldier>;
@@ -36,6 +39,7 @@ class Battle extends Sprite {
 		transcript = "";
 
 		var format = new TextFormat ("Traveling _Typewriter", 18, 0x111);
+		format.align = openfl.text.TextFormatAlign.CENTER;
 
 		// setup battlefield
 		soldiers = new Array<Soldier>();
@@ -92,17 +96,22 @@ class Battle extends Sprite {
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
 			var bg = cast(loader.content, MovieClip);
 			addChildAt(bg, 0);
+			groundEffects = new Sprite();
+			addChildAt(groundEffects, 1);
 		});
+
+		effects = new Sprite();
+		addChild(effects);
 	}
 
 	private function handleInput(t:TextEvent){
 		timeSinceType = 0;
 		if(t.text == "." || t.text == "?" || t.text == "!"){
+			transcript = field.text + t.text + " ";
+			field.text += " ";
 			// End player turn
 			if(parseLastSentence()){
 				turn = 1;
-				transcript = field.text + t.text + " ";
-				field.text += " ";
 				field.type = TextFieldType.DYNAMIC;
 
 				if(anyAxisAlive())
@@ -123,6 +132,8 @@ class Battle extends Sprite {
 	}
 
 	private function update(e:Event){
+		effects.graphics.clear();
+
 		for(soldier in soldiers){
 			soldier.update();
 		}

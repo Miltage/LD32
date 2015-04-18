@@ -61,6 +61,8 @@ class Battle extends Sprite {
 	}
 
 	private function update(e:Event){
-
+		for(soldier in soldiers){
+			soldier.update();
+		}
 	}
 }

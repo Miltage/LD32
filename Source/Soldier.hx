@@ -17,16 +17,15 @@ class Soldier extends Sprite {
 
 	private var healthBar:Sprite;
 
-	public function new(alignment:Int){
+	public function new(alignment:Int, name:String, x:Int, y:Int){
 		super();
 
 		this.alignment = alignment;
+		this.x = x;
+		this.y = y;
 		health = maxHealth = 10;
 
-		x = 200;
-		y = 300;
-
-		this.graphics.beginFill(0xff3344);
+		this.graphics.beginFill(alignment>0?0xff3344:0x33cc88);
 		this.graphics.drawRect(0, 0, 30, 60);
 		this.graphics.endFill();
 
@@ -36,7 +35,7 @@ class Soldier extends Sprite {
 
 		var nameField = new TextField();
 		nameField.defaultTextFormat = format;
-		nameField.text = "Soldier Name";
+		nameField.text = name;
 		nameField.selectable = false;
 		nameField.y = 65;
 		nameField.autoSize = TextFieldAutoSize.CENTER;

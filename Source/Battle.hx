@@ -42,8 +42,19 @@ class Battle extends Sprite {
 
 		// setup battlefield
 		soldiers = new Array<Soldier>();
-		soldiers.push(new Soldier(0));
-		addChild(soldiers[0]);
+		var soldierNames = NameGenerator.getNames(4);
+
+		for(i in 0...4){
+			var soldier = new Soldier(0, soldierNames[i], 600 + Std.int(Math.random()*100), 100*i+80);
+			soldiers.push(soldier);
+			addChild(soldier);
+		}
+
+		for(i in 0...4){
+			var soldier = new Soldier(1, "Enemy Soldier", 80 + Std.int(Math.random()*100), 100*i+80);
+			soldiers.push(soldier);
+			addChild(soldier);
+		}
 	}
 
 	private function handleInput(t:TextEvent){

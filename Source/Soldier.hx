@@ -5,6 +5,10 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import openfl.text.TextFieldAutoSize;
+import openfl.Assets;
+import openfl.display.Loader;
+import openfl.events.Event;
+import openfl.display.MovieClip;
 
 class Soldier extends Sprite {
 
@@ -19,6 +23,9 @@ class Soldier extends Sprite {
 	private var healthBar:Sprite;
 	private var nameField:TextField;
 
+	private var body:MovieClip;
+	private var moving:Bool = false;
+
 	public function new(alignment:Int, name:String, x:Int, y:Int){
 		super();
 
@@ -28,10 +35,6 @@ class Soldier extends Sprite {
 		this.y = y;
 		health = maxHealth = 10;
 		alive = true;
-
-		this.graphics.beginFill(alignment>0?0xff3344:0x33cc88);
-		this.graphics.drawRect(0, 0, 30, 60);
-		this.graphics.endFill();
 
 		var format = new TextFormat("Arial");
 		format.align = TextFormatAlign.CENTER;
@@ -57,10 +60,28 @@ class Soldier extends Sprite {
 		healthBar.graphics.drawRect(0, 0, 100, 2);
 		healthBar.graphics.endFill();
 		addChild(healthBar);
+
+		var bytes = Assets.getBytes("assets/soldier.swf");
+		var loader:Loader = new Loader();
+		loader.loadBytes(bytes);
+		
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
+			body = cast(loader.content, MovieClip);
+			body.x = -45;
+			body.y = -45;
+			addChild(body);
+			body.gotoAndPlay(100);
+		});
 	}
 
 	public function update(){
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
+
+		if(body != null && body.currentFrame == 99){
+			body.gotoAndPlay(1);
+		}else if(body != null && body.currentFrame == 131){
+			body.gotoAndPlay(100);
+		}
 	}
 
 	public function takeDamage(amount){

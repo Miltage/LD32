@@ -8,6 +8,9 @@ import openfl.text.TextFormat;
 import openfl.events.TextEvent;
 import openfl.Lib;
 import openfl.events.Event;
+import openfl.Assets;
+import openfl.display.Loader;
+import openfl.display.MovieClip;
 
 @:font("assets/TravelingTypewriter.ttf") class DefaultFont extends Font {}
 
@@ -22,6 +25,8 @@ class Battle extends Sprite {
 	public var transcript:String;
 
 	private var ai:AI;
+	private var timeSinceType:Int = 100;
+	private var writer:MovieClip;
 
 	public function new(){
 		super();
@@ -56,8 +61,9 @@ class Battle extends Sprite {
 		field.defaultTextFormat = format;
 		field.embedFonts = true;
 		field.text = "";
-		field.x = Lib.current.stage.stageWidth*0.2;
-		field.width = Lib.current.stage.stageWidth*0.6;
+		field.x = Lib.current.stage.stageWidth*0.3;
+		field.y = 360;
+		field.width = Lib.current.stage.stageWidth*0.4;
 		field.multiline = true;
 		field.wordWrap = true;
 		field.type = TextFieldType.INPUT;
@@ -67,9 +73,30 @@ class Battle extends Sprite {
 
 		field.addEventListener(TextEvent.TEXT_INPUT, handleInput);
 		this.addEventListener(Event.ENTER_FRAME, update);
+
+		var bytes = Assets.getBytes("assets/writer.swf");
+		var loader:Loader = new Loader();
+		loader.loadBytes(bytes);
+		
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
+			writer = cast(loader.content, MovieClip);
+			writer.x = 300;
+			writer.y = 380;
+			addChild(writer);
+		});
+
+		var bytes = Assets.getBytes("assets/scene.swf");
+		var loader:Loader = new Loader();
+		loader.loadBytes(bytes);
+		
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
+			var bg = cast(loader.content, MovieClip);
+			addChildAt(bg, 0);
+		});
 	}
 
 	private function handleInput(t:TextEvent){
+		timeSinceType = 0;
 		if(t.text == "." || t.text == "?" || t.text == "!"){
 			// End player turn
 			if(parseLastSentence()){
@@ -103,6 +130,7 @@ class Battle extends Sprite {
 		if(transcript.length > field.text.length){
 			field.text += transcript.charAt(field.text.length);
 			field.setSelection(field.text.length, field.text.length);
+			timeSinceType = 0;
 		}
 
 		// End enemy turn
@@ -118,6 +146,14 @@ class Battle extends Sprite {
 				trace("AI wins!");
 			}
 		}
+
+		timeSinceType++;
+		if(writer != null && writer.currentFrame == 20 && timeSinceType > 20){
+			writer.gotoAndPlay(1);
+		}else if(writer != null && writer.currentFrame == 65 && timeSinceType < 10){
+			writer.gotoAndPlay(38);
+		}
+
 	}
 
 	// Convenience functions //

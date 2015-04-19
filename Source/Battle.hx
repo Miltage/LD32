@@ -58,15 +58,17 @@ class Battle extends Sprite {
 		alliesSoldiers = new Array<Soldier>();
 		var soldierNames = NameGenerator.getNames(4);
 
+		generateCover();
+
 		for(i in 0...4){
-			var soldier = new Soldier(0, soldierNames[i], 600 + Std.int(Math.random()*100), 100*i+80);
+			var soldier = new Soldier(0, soldierNames[i], 650 + Std.int(Math.random()*80), 100*i+80);
 			soldiers.push(soldier);
 			alliesSoldiers.push(soldier);
 			addChild(soldier);
 		}
 
 		for(i in 0...4){
-			var soldier = new Soldier(1, "Enemy Soldier "+(i+1), 80 + Std.int(Math.random()*100), 100*i+80);
+			var soldier = new Soldier(1, "Enemy Soldier "+(i+1), 40 + Std.int(Math.random()*80), 100*i+80);
 			soldiers.push(soldier);
 			axisSoldiers.push(soldier);
 			addChild(soldier);
@@ -203,8 +205,8 @@ class Battle extends Sprite {
 	private function showEnding(victors){
 		var winners = victors>0?"enemy":"allied";
 		transcript += SentenceParser.chooseRandom([
-			"And with that the "+winners+" soldiers won the battle.",
-			"And with that the "+winners+" soldiers were victorious.",
+			"And with that, the "+winners+" soldiers won the battle.",
+			"And with that, the "+winners+" soldiers were victorious.",
 			"Ultimately, the "+winners+" soldiers lived to tell this story.",
 			"And with that the "+winners+" soldiers were the victors."
 		]);
@@ -214,6 +216,24 @@ class Battle extends Sprite {
 		}
 
 		running = false;
+	}
+
+	private function generateCover(){
+		var count:Int = 0;
+		for(i in 0...4){
+			if(Math.random()>.5 || 4-count < i){
+				addChild(new Cover(220, 100 + 120 * i, 1));
+				count++;
+			}
+		}
+
+		count = 0;
+		for(i in 0...4){
+			if(Math.random()>.5 || 4-count < i){
+				addChild(new Cover(580, 100 + 120 * i, 0));
+				count++;
+			}
+		}
 	}
 
 	// Convenience functions //

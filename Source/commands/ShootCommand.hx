@@ -51,7 +51,8 @@ class ShootCommand extends Command {
 				else
 					battle.transcript += SentenceParser.chooseRandom([
 						" A deadly blow.",
-						" He collapses, dead.",
+						" The soldier collapses, dead.",
+						" Death comes swiftly to the recipient."
 						" "+SentenceParser.possessive(target.lastName)+" life ends abruptly."
 					]);
 			}else{

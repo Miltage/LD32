@@ -9,6 +9,7 @@ import openfl.Assets;
 import openfl.display.Loader;
 import openfl.events.Event;
 import openfl.display.MovieClip;
+import openfl.geom.Point;
 
 class Soldier extends Sprite {
 
@@ -30,6 +31,7 @@ class Soldier extends Sprite {
 
 	private var body:MovieClip;
 	private var moving:Bool = false;
+	private var targetPos:Point;
 
 	public function new(alignment:Int, name:String, x:Int, y:Int){
 		super();
@@ -86,10 +88,26 @@ class Soldier extends Sprite {
 			}
 			addChild(body);
 		});
+		
 	}
 
 	public function update(){
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
+
+		if(targetPos != null){
+			var d:Point = targetPos.subtract(new Point(x, y));
+			if(d.length < 2){
+				targetPos = null;
+				moving = false;
+				body.gotoAndPlay("idle");
+			}else{				
+				x += d.x/d.length*2;
+				y += d.y/d.length*2;
+				moving = true;
+				if(body != null && (body.currentFrame < 100 || body.currentFrame > 131))
+					body.gotoAndPlay("walk");
+			}
+		}
 
 		// Soldier animation logic
 		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402 || body.currentFrame == 313 

@@ -94,9 +94,9 @@ class Soldier extends Sprite {
 		// Soldier animation logic
 		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402 || body.currentFrame == 313 
 			|| body.currentFrame == 208 || body.currentFrame == 361 || body.currentFrame == 484))
-			body.gotoAndPlay(1);
+			body.gotoAndPlay("idle");
 		else if(body != null && body.currentFrame == 131)
-			body.gotoAndPlay(100);
+			body.gotoAndPlay("walk");
 		else if(body != null && body.currentFrame == 142 && command != null)
 			command.drawEffects();
 		else if(body != null && body.currentFrame == 243)

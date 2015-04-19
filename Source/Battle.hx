@@ -29,7 +29,10 @@ class Battle extends Sprite {
 
 	private var ai:AI;
 	private var timeSinceType:Int = 100;
+	private var typistCount:Int = 0;
+	private var wait:Int = 0;
 	private var writer:MovieClip;
+	private var running:Bool = true;
 
 	public function new(){
 		super();
@@ -107,17 +110,18 @@ class Battle extends Sprite {
 	private function handleInput(t:TextEvent){
 		timeSinceType = 0;
 		if(t.text == "." || t.text == "?" || t.text == "!"){
-			transcript = field.text + t.text + " ";
-			field.text += " ";
+			transcript = field.text + t.text;
 			// End player turn
 			if(parseLastSentence()){
-				turn = 1;
 				field.type = TextFieldType.DYNAMIC;
+				field.text += " ";
+				transcript += " ";
+				wait = 50;
 
-				if(anyAxisAlive())
+				if(anyAxisAlive()){
+					turn = 1;
 					ai.takeTurn();
-				else
-					trace("Player wins!");
+				}
 			}
 		}
 	}
@@ -133,38 +137,64 @@ class Battle extends Sprite {
 
 	private function update(e:Event){
 		effects.graphics.clear();
+		if(wait > 0) wait--;
 
 		for(soldier in soldiers){
 			soldier.update();
 		}
 
-		if(transcript.length > field.text.length){
+		typistCount++;
+		if(transcript.length > field.text.length && typistCount % 2 == 0){
 			field.text += transcript.charAt(field.text.length);
 			field.setSelection(field.text.length, field.text.length);
 			timeSinceType = 0;
 		}
 
 		// End enemy turn
-		if(turn == 1 && transcript.length == field.text.length){
+		if(turn == 1 && transcript.length == field.text.length && !ai.command.complete && wait == 0){
 			ai.runCommand();
+		}
+		else if(turn == 1 && transcript.length == field.text.length && wait == 0){
 			if(anyAlliedAlive()){
 				turn = 0;
 				transcript = field.text += " ";
 				field.type = TextFieldType.INPUT;
 				field.setSelection(field.text.length, field.text.length);
 				Lib.current.stage.focus = field;
-			}else{
-				trace("AI wins!");
+			}else if(running){
+				showEnding(1);
 			}
 		}
+		else if(turn == 0 && transcript.length == field.text.length && wait == 0 && running){
+			if(!anyAxisAlive()) showEnding(0);
+		}
 
+		// Writer animation logic
 		timeSinceType++;
 		if(writer != null && writer.currentFrame == 20 && timeSinceType > 20){
 			writer.gotoAndPlay(1);
 		}else if(writer != null && writer.currentFrame == 65 && timeSinceType < 10){
 			writer.gotoAndPlay(38);
+		}else if(writer != null && writer.currentFrame > 20 && writer.currentFrame < 66 && timeSinceType > 20){
+			writer.gotoAndPlay(66);
 		}
 
+	}
+
+	private function showEnding(victors){
+		var winners = victors>0?"enemy":"allied";
+		transcript += SentenceParser.chooseRandom([
+			"And with that the "+winners+" soldiers won the battle.",
+			"And with that the "+winners+" soldiers were victorious.",
+			"Ultimately, the "+winners+" soldiers lived to tell this story.",
+			"And with that the "+winners+" soldiers were the victors."
+		]);
+
+		for(soldier in soldiers){
+			if(soldier.alive) soldier.gotoAndPlay(Math.random()>.5?244:266);
+		}
+
+		running = false;
 	}
 
 	// Convenience functions //

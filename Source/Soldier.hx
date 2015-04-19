@@ -19,6 +19,7 @@ class Soldier extends Sprite {
 	public var alignment:Int;
 	public var lastName:String;
 	public var alive:Bool;
+	public var jammed:Bool;
 
 	public var command:Command;
 
@@ -36,6 +37,7 @@ class Soldier extends Sprite {
 		this.x = x;
 		this.y = y;
 		alive = true;
+		jammed = false;
 
 		var format = new TextFormat("Arial");
 		format.align = TextFormatAlign.CENTER;
@@ -81,25 +83,25 @@ class Soldier extends Sprite {
 	public function update(){
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
 
-		if(body != null && body.currentFrame == 99)
+		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402))
 			body.gotoAndPlay(1);
 		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay(100);
-		else if(body != null && body.currentFrame == 155)
-			body.gotoAndPlay(1);
 		else if(body != null && body.currentFrame == 142 && command != null)
 			command.drawEffects();
 		else if(body != null && body.currentFrame == 243)
 			body.stop();
+		else if(body != null && body.currentFrame == 265)
+			body.gotoAndPlay(252);
 		
 	}
 
 	public function takeDamage(amount){
 		health -= amount;
+		// Soldier death
 		if(health <= 0){
 			health = 0;
 			alive = false;
-			trace("Soldier died");
 			body.gotoAndPlay(209);
 		}
 	}

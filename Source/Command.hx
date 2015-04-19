@@ -4,17 +4,21 @@ class Command {
 
 	public var subject:Soldier;
 	public var target:Soldier;
+	public var complete:Bool = false;
+
+	private var battle:Battle;
 	
-	public function new(subject, target){
+	public function new(subject, target, battle){
 		this.subject = subject;
 		this.target = target;
+		this.battle = battle;
 	}
 
 	public function perform(){
-
+		complete = true;
 	}
 
 	public function drawEffects(){
-		
+
 	}
 }

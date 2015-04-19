@@ -20,7 +20,10 @@ class SentenceParser {
 
 		if(subject != null){
 			if(!subject.alive){
-				battle.transcript += "He is dead and thus his actions don't have much effect. ";
+				battle.transcript += SentenceParser.chooseRandom([
+						" He is dead and thus his actions don't have much effect. ",
+						" His corpse isn't very good at it. "
+					]);
 				return false;
 			}
 
@@ -31,8 +34,9 @@ class SentenceParser {
 			}
 
 			switch(action){
-				case "fires": command = new ShootCommand(subject, target);
-				case "shoots": command = new ShootCommand(subject, target);
+				case "fires": command = new ShootCommand(subject, target, battle);
+				case "shoots": command = new ShootCommand(subject, target, battle);
+				case "unjams": command = new UnjamCommand(subject, target, battle);
 			}
 
 			if(command != null){
@@ -42,5 +46,9 @@ class SentenceParser {
 		}		
 
 		return command != null;
+	}
+
+	public static function chooseRandom(options:Array<Dynamic>){
+		return options[Std.int(Math.random()*options.length)];
 	}
 }

@@ -5,6 +5,7 @@ class Command {
 	public var subject:Soldier;
 	public var target:Soldier;
 	public var complete:Bool = false;
+	public var drawn:Bool = false;
 
 	private var battle:Battle;
 	
@@ -14,11 +15,11 @@ class Command {
 		this.battle = battle;
 	}
 
-	public function perform(){
+	public function perform(){		
 		complete = true;
 	}
 
 	public function drawEffects(){
-
+		drawn = true;
 	}
 }

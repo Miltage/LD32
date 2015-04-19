@@ -15,15 +15,17 @@ class Soldier extends Sprite {
 	public static inline var HEALTHBAR_WIDTH = 60;
 	
 	public var health:Int = 1;
-	public var maxHealth:Int = 1;
+	public var maxHealth:Int = 10;
 	public var alignment:Int;
 	public var lastName:String;
 	public var alive:Bool;
 	public var jammed:Bool;
+	public var bullets:Int = 6;
 
 	public var command:Command;
 
 	private var healthBar:Sprite;
+	private var bulletsCounter:Sprite;
 	private var nameField:TextField;
 
 	private var body:MovieClip;
@@ -64,6 +66,12 @@ class Soldier extends Sprite {
 		healthBar.graphics.endFill();
 		addChild(healthBar);
 
+		bulletsCounter = new Sprite();
+		bulletsCounter.x = 40;
+		bulletsCounter.y = 50;
+		drawBulletCounter();
+		addChild(bulletsCounter);
+
 		var bytes = Assets.getBytes("assets/soldier.swf");
 		var loader:Loader = new Loader();
 		loader.loadBytes(bytes);
@@ -84,7 +92,8 @@ class Soldier extends Sprite {
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
 
 		// Soldier animation logic
-		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402 || body.currentFrame == 313))
+		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402 || body.currentFrame == 313 
+			|| body.currentFrame == 208 || body.currentFrame == 361 || body.currentFrame == 484))
 			body.gotoAndPlay(1);
 		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay(100);
@@ -96,7 +105,10 @@ class Soldier extends Sprite {
 			body.gotoAndPlay(252);
 		else if(body != null && body.currentFrame == 280 && !Battle.running)
 			body.stop();
+		else if(body != null && body.currentFrame > 440 && bullets < 6)
+			bullets++;
 		
+		drawBulletCounter();
 	}
 
 	public function takeDamage(amount){
@@ -105,11 +117,20 @@ class Soldier extends Sprite {
 		if(health <= 0){
 			health = 0;
 			alive = false;
-			body.gotoAndPlay(209);
 		}
 	}
 
 	public function gotoAndPlay(frame:Int){
 		body.gotoAndPlay(frame);
 	}
+
+	private function drawBulletCounter(){
+		bulletsCounter.graphics.clear();
+		if(!alive) return;
+		bulletsCounter.graphics.beginFill(0xffffff);
+		for(i in 0...bullets)
+			bulletsCounter.graphics.drawRect(alignment*-60, 0-i*5, 6, 2);
+		bulletsCounter.graphics.endFill();
+	}
+
 }

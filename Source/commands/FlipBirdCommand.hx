@@ -13,7 +13,7 @@ class FlipBirdCommand extends Command {
 		battle.transcript += SentenceParser.chooseRandom([
 			" He heaves a mighty finger at the enemy.",
 			" This riles up the opposition beyond belief.",
-			" All those years angry driving culminates into this glorious moment."
+			" All those years of angry driving culminates into this glorious moment."
 		]);
 		
 	}

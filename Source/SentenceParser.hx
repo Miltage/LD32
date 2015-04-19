@@ -38,6 +38,9 @@ class SentenceParser {
 				case "fires": command = new ShootCommand(subject, target, battle);
 				case "shoots": command = new ShootCommand(subject, target, battle);
 				case "unjams": command = new UnjamCommand(subject, target, battle);
+				case "waits": command = new Command(subject, target, battle);
+				case "yells": command = new YellCommand(subject, target, battle);
+				case "reloads": command = new ReloadCommand(subject, target, battle);
 			}
 
 			if(command == null)
@@ -45,7 +48,7 @@ class SentenceParser {
 
 			// Two word actions
 			switch(action){
-				default: true;
+				case "does nothing": command = new Command(subject, target, battle);
 			}
 
 			if(command == null)

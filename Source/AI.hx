@@ -21,6 +21,10 @@ class AI {
 			command = new UnjamCommand(subject, target, battle);
 			battle.transcript += "Enemy soldier attempts to unjam his weapon.";
 		}
+		else if(subject.bullets == 0){
+			command = new ReloadCommand(subject, target, battle);
+			battle.transcript += "Enemy soldier reloads his weapon.";
+		}
 		else{
 			command = new ShootCommand(subject, target, battle);
 			battle.transcript += "Enemy soldier shoots at "+target.lastName+".";
@@ -28,10 +32,11 @@ class AI {
 
 		subject.command = command;
 
-		battle.transcript += " ";
 	}
 
 	public function runCommand(){
 		command.perform();
+
+		battle.transcript += " ";
 	}
 }

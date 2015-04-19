@@ -154,18 +154,17 @@ class Battle extends Sprite {
 		if(turn == 1 && transcript.length == field.text.length && !ai.command.complete && wait == 0){
 			ai.runCommand();
 		}
-		else if(turn == 1 && transcript.length == field.text.length && wait == 0){
-			if(anyAlliedAlive()){
-				turn = 0;
-				field.type = TextFieldType.INPUT;
-				field.setSelection(field.text.length, field.text.length);
-				Lib.current.stage.focus = field;
-			}else if(running){
-				showEnding(1);
-			}
+		else if(turn == 1 && transcript.length == field.text.length && wait == 0 && anyAlliedAlive()){
+			turn = 0;
+			field.type = TextFieldType.INPUT;
+			field.setSelection(field.text.length, field.text.length);
+			Lib.current.stage.focus = field;
 		}
-		else if(turn == 0 && transcript.length == field.text.length && wait == 0 && running){
-			if(!anyAxisAlive()) showEnding(0);
+		else if(!anyAlliedAlive() && running && ai.command.drawn){
+			showEnding(1);
+		}
+		else if(!anyAxisAlive() && turn == 0 && transcript.length == field.text.length && wait == 0 && running){
+			showEnding(0);
 		}
 
 		// Writer animation logic

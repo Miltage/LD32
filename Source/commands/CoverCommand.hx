@@ -11,7 +11,7 @@ class CoverCommand extends Command {
 	public override function perform(){
 		super.perform();
 		if(subject.inCover){
-			battle.transcript += " He decides against it, seeing as he is already in cover.";
+			Main.transcript += " He decides against it, seeing as he is already in cover.";
 			return;
 		}
 
@@ -23,7 +23,7 @@ class CoverCommand extends Command {
 		}
 
 		if(possibilities.length == 0){
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" He sees that there is nowhere for him to take cover.",
 				" He finds all the available spots for cover occupied."
 			]);

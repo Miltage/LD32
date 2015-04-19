@@ -29,7 +29,7 @@ class ShootCommand extends Command {
 		critical = Math.random()>.8;
 
 		if(subject.bullets == 0){
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" Click. He's out of ammo.",
 				" He realises there are no bullets in his gun."
 			]);
@@ -38,7 +38,7 @@ class ShootCommand extends Command {
 		}
 
 		if(subject.jammed){
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" His gun is still jammed, he cannot use it."
 			]);
 			success = false;
@@ -49,7 +49,7 @@ class ShootCommand extends Command {
 		else if(target.inCover) hit = false;
 
 		if(target.inCover && !hit){
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" The bullet is stopped short by "+SentenceParser.possessive(target.lastName)+" cover.",
 				" The bullet hits the cover in front of him."
 			]);
@@ -62,22 +62,22 @@ class ShootCommand extends Command {
 			if(hit){
 				target.takeDamage(2+Math.random()*2 + (critical?3:0));
 				if(target.alive){
-					battle.transcript += SentenceParser.chooseRandom([
+					Main.transcript += SentenceParser.chooseRandom([
 						" Direct hit.",
 						" The bullet hits its mark.",
 						" "+target.lastName+" takes a hard hit."
 					]);
-					if(critical) battle.transcript += " It hits critically.";
+					if(critical) Main.transcript += " It hits critically.";
 				}
 				else
-					battle.transcript += SentenceParser.chooseRandom([
+					Main.transcript += SentenceParser.chooseRandom([
 						" A deadly blow.",
 						" The soldier collapses, dead.",
 						" Death comes swiftly to the recipient.",
 						" "+SentenceParser.possessive(target.lastName)+" life ends abruptly."
 					]);
 			}else{
-				battle.transcript += SentenceParser.chooseRandom([
+				Main.transcript += SentenceParser.chooseRandom([
 					" The bullet whizzes past him.",
 					" The bullet narrowly misses.",
 					" A near miss."
@@ -87,7 +87,7 @@ class ShootCommand extends Command {
 		}
 		else {
 			subject.jammed = true;
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" His gun jams and he is unable to shoot.",
 				" Something is blocking the barrel of his gun.",
 				" However, the gun's inner workings malfunction, and he is unable to do so."
@@ -103,6 +103,7 @@ class ShootCommand extends Command {
 
 		trail.graphics.lineStyle(2, 0xffffff);
 		trail.graphics.moveTo(subject.x - 30 + subject.alignment*100 + (subject.inCover?-8:0), subject.y - 5 + (subject.inCover?15:0));
+
 		if(hitCover){
 			trail.graphics.lineTo(target.x-80+160*target.alignment, target.y+20);
 			ParticleEngine.bulletHit(target.x-80+160*target.alignment, target.y, target.alignment>0?-1:1);

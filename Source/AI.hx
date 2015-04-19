@@ -19,19 +19,19 @@ class AI {
 
 		if(subject.jammed){
 			command = new UnjamCommand(subject, target, battle);
-			battle.transcript += "An enemy soldier attempts to unjam his weapon.";
+			Main.transcript += "An enemy soldier attempts to unjam his weapon.";
 		}
 		else if(subject.bullets == 0){
 			command = new ReloadCommand(subject, target, battle);
-			battle.transcript += "An enemy soldier reloads his weapon.";
+			Main.transcript += "An enemy soldier reloads his weapon.";
 		}
 		else if(subject.inCover && subject.shooting && Math.random()>.6){
 			command = new DuckCommand(subject, target, battle);			
-			battle.transcript += "An enemy soldier ducks behind cover.";
+			Main.transcript += "An enemy soldier ducks behind cover.";
 		}
 		else if(coverAvailable() && !subject.inCover && Math.random()>.4){
 			command = new CoverCommand(subject, target, battle);
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" An enemy soldier runs for cover.",
 				" An enemy soldier runs behind some nearby cover.",
 				" An enemy soldier takes refuge behind some cover."
@@ -39,9 +39,9 @@ class AI {
 		}
 		else{
 			command = new ShootCommand(subject, target, battle);
-			if(battle.numAxisAlive() == 1) battle.transcript += "The last remaining enemy soldier";
-			else battle.transcript += Math.random()>.5?"An enemy soldier":"One of the enemy soldiers";
-			battle.transcript += " shoots at "+target.lastName+".";
+			if(battle.numAxisAlive() == 1) Main.transcript += "The last remaining enemy soldier";
+			else Main.transcript += Math.random()>.5?"An enemy soldier":"One of the enemy soldiers";
+			Main.transcript += " shoots at "+target.lastName+".";
 		}
 
 		subject.command = command;
@@ -51,7 +51,7 @@ class AI {
 	public function runCommand(){
 		command.perform();
 
-		battle.transcript += " ";
+		Main.transcript += " ";
 	}
 
 	public function coverAvailable(){

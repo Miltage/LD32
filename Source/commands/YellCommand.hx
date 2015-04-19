@@ -9,7 +9,7 @@ class YellCommand extends Command {
 	public override function perform(){
 		super.perform();
 
-		battle.transcript += SentenceParser.chooseRandom([
+		Main.transcript += SentenceParser.chooseRandom([
 			" He shakes his fist angrily at the opposition.",
 			" Foul words leave his mouth.",
 			" He appears angry."

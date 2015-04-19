@@ -20,7 +20,7 @@ class SentenceParser {
 
 		if(subject != null){
 			if(!subject.alive){
-				battle.transcript += SentenceParser.chooseRandom([
+				Main.transcript += SentenceParser.chooseRandom([
 						" He is dead and thus his actions don't have much effect. ",
 						" His corpse isn't very good at it. "
 					]);

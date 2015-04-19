@@ -10,7 +10,7 @@ class ReloadCommand extends Command {
 		super.perform();
 
 		if(subject.bullets == 3){
-			battle.transcript += " His gun is already full of ammo.";
+			Main.transcript += " His gun is already full of ammo.";
 			return;
 		}
 

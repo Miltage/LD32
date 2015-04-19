@@ -9,7 +9,7 @@ class FlipBirdCommand extends Command {
 	public override function perform(){
 		super.perform();
 
-		battle.transcript += SentenceParser.chooseRandom([
+		Main.transcript += SentenceParser.chooseRandom([
 			" He heaves a mighty finger at the enemy.",
 			" This riles up the opposition beyond belief.",
 			" All those years of angry driving culminates into this glorious moment."

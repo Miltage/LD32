@@ -14,7 +14,7 @@ class UnjamCommand extends Command {
 		success = Math.random()>.2;
 
 		if(!subject.jammed){
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" His gun isn't even jammed. He laughs in embarrassment.",
 				" His gun isn't jammed. He will never live this down."
 			]);
@@ -23,7 +23,7 @@ class UnjamCommand extends Command {
 
 		if(success){
 			subject.jammed = false;
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" He knocks his gun around a bit and a shell comes loose.",
 				" An old shell falls from the barrel.",
 				" Something clicks and the gun starts working again."
@@ -31,7 +31,7 @@ class UnjamCommand extends Command {
 		}
 		else {
 			subject.jammed = true;
-			battle.transcript += SentenceParser.chooseRandom([
+			Main.transcript += SentenceParser.chooseRandom([
 				" Nothing changes.",
 				" It has no affect.",
 				" No use, still as jammed as ever."

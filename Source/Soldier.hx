@@ -122,7 +122,7 @@ class Soldier extends Sprite {
 			body.gotoAndPlay("idle");
 		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay("walk");
-		else if(body != null && (body.currentFrame == 142 || body.currentFrame == 540) && command != null)
+		else if(body != null && (body.currentFrame == 142 || body.currentFrame == 540 || body.currentFrame == 580) && command != null)
 			command.drawEffects();
 		else if(body != null && (body.currentFrame == 243 || body.currentFrame == 515 || body.currentFrame == 545 || body.currentFrame == 564))
 			body.stop();

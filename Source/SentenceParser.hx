@@ -46,6 +46,7 @@ class SentenceParser {
 				case "yells": command = new YellCommand(subject, target, battle);
 				case "reloads": command = new ReloadCommand(subject, target, battle);
 				case "ducks": command = new DuckCommand(subject, target, battle);
+				case "leaves": command = new LeaveCoverCommand(subject, target, battle);
 
 			}
 

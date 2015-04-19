@@ -28,7 +28,7 @@ class AI {
 
 		subject.command = command;
 
-		
+		battle.transcript += " ";
 	}
 
 	public function runCommand(){

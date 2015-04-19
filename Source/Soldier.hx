@@ -83,7 +83,8 @@ class Soldier extends Sprite {
 	public function update(){
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
 
-		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402))
+		// Soldier animation logic
+		if(body != null && (body.currentFrame == 99 || body.currentFrame == 155 || body.currentFrame == 402 || body.currentFrame == 313))
 			body.gotoAndPlay(1);
 		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay(100);
@@ -93,6 +94,8 @@ class Soldier extends Sprite {
 			body.stop();
 		else if(body != null && body.currentFrame == 265)
 			body.gotoAndPlay(252);
+		else if(body != null && body.currentFrame == 280 && !Battle.running)
+			body.stop();
 		
 	}
 

@@ -12,7 +12,7 @@ class ShootCommand extends Command {
 		super.perform();
 		subject.gotoAndPlay(132);
 
-		success = Math.random()>.1;
+		success = Math.random()>.05;
 
 		if(subject.jammed){
 			battle.transcript += SentenceParser.chooseRandom([

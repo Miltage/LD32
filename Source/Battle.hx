@@ -18,6 +18,7 @@ class Battle extends Sprite {
 
 	public static var effects:Sprite;
 	public static var groundEffects:Sprite;
+	public static var running:Bool = true;
 
 	public var field:TextField;
 	public var soldiers:Array<Soldier>;
@@ -32,7 +33,6 @@ class Battle extends Sprite {
 	private var typistCount:Int = 0;
 	private var wait:Int = 0;
 	private var writer:MovieClip;
-	private var running:Bool = true;
 
 	public function new(){
 		super();
@@ -157,7 +157,6 @@ class Battle extends Sprite {
 		else if(turn == 1 && transcript.length == field.text.length && wait == 0){
 			if(anyAlliedAlive()){
 				turn = 0;
-				transcript = field.text += " ";
 				field.type = TextFieldType.INPUT;
 				field.setSelection(field.text.length, field.text.length);
 				Lib.current.stage.focus = field;

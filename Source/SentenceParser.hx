@@ -33,10 +33,27 @@ class SentenceParser {
 				target = battle.getRandomAxisSoldier();
 			}
 
+			// Single word actions
 			switch(action){
 				case "fires": command = new ShootCommand(subject, target, battle);
 				case "shoots": command = new ShootCommand(subject, target, battle);
 				case "unjams": command = new UnjamCommand(subject, target, battle);
+			}
+
+			if(command == null)
+				action = parts[1] + " " +parts[2];
+
+			// Two word actions
+			switch(action){
+				default: true;
+			}
+
+			if(command == null)
+				action = parts[1] + " " +parts[2] + " " + parts[3];
+
+			// Three word actions
+			switch(action){
+				case "flips the bird": command = new FlipBirdCommand(subject, target, battle);
 			}
 
 			if(command != null){

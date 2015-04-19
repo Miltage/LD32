@@ -14,13 +14,13 @@ class Soldier extends Sprite {
 
 	public static inline var HEALTHBAR_WIDTH = 60;
 	
-	public var health:Int = 1;
+	public var health:Int = 10;
 	public var maxHealth:Int = 10;
 	public var alignment:Int;
 	public var lastName:String;
 	public var alive:Bool;
 	public var jammed:Bool;
-	public var bullets:Int = 6;
+	public var bullets:Int = 3;
 
 	public var command:Command;
 
@@ -105,14 +105,14 @@ class Soldier extends Sprite {
 			body.gotoAndPlay(252);
 		else if(body != null && body.currentFrame == 280 && !Battle.running)
 			body.stop();
-		else if(body != null && body.currentFrame > 440 && bullets < 6)
+		else if(body != null && body.currentFrame > 440 && bullets < 3)
 			bullets++;
 		
 		drawBulletCounter();
 	}
 
 	public function takeDamage(amount){
-		health -= amount;
+		health -= Std.int(amount);
 		// Soldier death
 		if(health <= 0){
 			health = 0;

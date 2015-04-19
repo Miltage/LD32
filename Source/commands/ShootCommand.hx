@@ -4,6 +4,7 @@ class ShootCommand extends Command {
 
 	private var success:Bool = false;
 	private var hit:Bool = false;
+	private var critical:Bool = false;
 	
 	public function new(subject, target, battle){
 		super(subject, target, battle);
@@ -15,6 +16,7 @@ class ShootCommand extends Command {
 
 		success = Math.random()>.05;
 		hit = Math.random()>.2;
+		critical = Math.random()>.8;
 
 		if(subject.bullets == 0){
 			battle.transcript += SentenceParser.chooseRandom([
@@ -34,7 +36,29 @@ class ShootCommand extends Command {
 		}
 
 		if(success){
-			target.takeDamage(4);
+			if(hit){
+				target.takeDamage(2+Math.random()*2 + (critical?3:0));
+				if(target.alive){
+					battle.transcript += SentenceParser.chooseRandom([
+						" Direct hit.",
+						" The bullet hits its mark.",
+						" "+target.lastName+" takes a hard hit."
+					]);
+					if(critical) battle.transcript += " It's a critical hit!";
+				}
+				else
+					battle.transcript += SentenceParser.chooseRandom([
+						" A deadly blow.",
+						" He collapses, dead.",
+						" "+SentenceParser.possessive(target.lastName)+" life ends abruptly."
+					]);
+			}else{
+				battle.transcript += SentenceParser.chooseRandom([
+					" The bullet whizzes past him.",
+					" The bullet narrowly misses.",
+					" A near miss."
+				]);
+			}
 			subject.bullets--;
 		}
 		else {
@@ -52,8 +76,13 @@ class ShootCommand extends Command {
 		if(!success) return;
 
 		Battle.effects.graphics.lineStyle(2, 0xffffff);
-		Battle.effects.graphics.moveTo(subject.x - 40 + subject.alignment*100, subject.y);
-		Battle.effects.graphics.lineTo(target.x, target.y);
+		Battle.effects.graphics.moveTo(subject.x - 30 + subject.alignment*100, subject.y - 5);
+		if(hit)
+			Battle.effects.graphics.lineTo(target.x, target.y);
+		else
+			Battle.effects.graphics.lineTo(target.x+100-200*target.alignment, target.y+Math.random()*200-100);
+
+		if(!hit) return;
 
 		if(target.alive) target.gotoAndPlay(156);
 		else target.gotoAndPlay(209);

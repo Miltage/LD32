@@ -71,4 +71,9 @@ class SentenceParser {
 	public static function chooseRandom(options:Array<Dynamic>){
 		return options[Std.int(Math.random()*options.length)];
 	}
+
+	public static function possessive(name:String){
+		if(StringTools.endsWith(name, "s")) return name+"'";
+		return name+"'s";
+	}
 }

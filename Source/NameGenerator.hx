@@ -8,7 +8,31 @@ class NameGenerator {
 		"Johnson",
 		"Daniels",
 		"Jameson",
-		"Turner"
+		"Turner",
+		"Richardson",
+		"Harris",
+		"Clark",
+		"Lewis",
+		"Jackson",
+		"Jefferson",
+		"Anderson",
+		"Davids",
+		"Davis",
+		"Thompson",
+		"Walker",
+		"Miller",
+		"Roberts",
+		"Baker",
+		"Collins",
+		"Phillips",
+		"Cooper",
+		"Sanders",
+		"Barnes",
+		"Woods",
+		"Harrison",
+		"Tucker",
+		"Robertson",
+		"Mills"
 	];
 
 	public static function getNames(amount:Int){

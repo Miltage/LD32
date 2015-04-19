@@ -38,6 +38,7 @@ class CoverCommand extends Command {
 		var cover = possibilities[0];
 		subject.moveTo(cover.x+50, cover.y-55);
 		cover.occupant = subject;
+		subject.cover = cover;
 	}
 
 	public override function postCommand(){

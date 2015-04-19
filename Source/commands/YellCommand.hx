@@ -8,13 +8,21 @@ class YellCommand extends Command {
 
 	public override function perform(){
 		super.perform();
-		subject.gotoAndPlay(314);
 
 		battle.transcript += SentenceParser.chooseRandom([
 			" He shakes his fist angrily at the opposition.",
 			" Foul words leave his mouth.",
 			" He appears angry."
 		]);
+
+		if(subject.inCover)
+			subject.getUp();
+		else
+			postPrepare();
 		
+	}
+
+	public override function postPrepare(){
+		subject.gotoAndPlay(314);
 	}
 }

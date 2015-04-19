@@ -14,12 +14,11 @@ class LeaveCoverCommand extends Command {
 			return;
 		}
 
-		subject.gotoAndPlay(565);
+		subject.getUp();
 		
 	}
 
-	public override function drawEffects(){
-		subject.shooting = subject.inCover = false;
+	public override function postPrepare(){
 		subject.moveTo(subject.x + 20 + Math.random()*60, subject.y + Math.random()*200-100);
 	}
 

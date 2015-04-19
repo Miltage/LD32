@@ -26,6 +26,7 @@ class Soldier extends Sprite {
 	public var shooting:Bool;
 
 	public var command:Command;
+	public var cover:Cover;
 
 	private var healthBar:Sprite;
 	private var bulletsCounter:Sprite;
@@ -122,15 +123,17 @@ class Soldier extends Sprite {
 			body.gotoAndPlay("idle");
 		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay("walk");
-		else if(body != null && (body.currentFrame == 142 || body.currentFrame == 540 || body.currentFrame == 580) && command != null)
+		else if(body != null && (body.currentFrame == 142 || body.currentFrame == 540) && command != null)
 			command.drawEffects();
+		else if(body != null && body.currentFrame == 580 && command != null)
+			command.postPrepare();
 		else if(body != null && (body.currentFrame == 243 || body.currentFrame == 515 || body.currentFrame == 545 || body.currentFrame == 564))
 			body.stop();
 		else if(body != null && body.currentFrame == 265)
 			body.gotoAndPlay(252);
 		else if(body != null && body.currentFrame == 280 && !Battle.running)
 			body.stop();
-		else if(body != null && body.currentFrame > 440 && bullets < 3)
+		else if(body != null && body.currentFrame > 440  && body.currentFrame < 450 && bullets < 3)
 			bullets++;
 		
 		drawBulletCounter();
@@ -142,6 +145,8 @@ class Soldier extends Sprite {
 		if(health <= 0){
 			health = 0;
 			alive = false;
+			if(cover != null)
+				cover.occupant = null;
 		}
 	}
 
@@ -160,6 +165,12 @@ class Soldier extends Sprite {
 
 	public function moveTo(x:Float, y:Float){
 		targetPos = new Point(x, y);
+	}
+
+	public function getUp(){
+		body.gotoAndPlay(565);
+		shooting = inCover = false;
+		cover.occupant = null;
 	}
 
 	public function getFrame(){

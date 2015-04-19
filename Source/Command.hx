@@ -27,4 +27,6 @@ class Command {
 	public function postCommand(){
 		post = true;
 	}
+
+	public function postPrepare(){}
 }

@@ -10,7 +10,6 @@ class UnjamCommand extends Command {
 
 	public override function perform(){
 		super.perform();
-		subject.gotoAndPlay(362);
 
 		success = Math.random()>.2;
 
@@ -38,5 +37,14 @@ class UnjamCommand extends Command {
 				" No use, still as jammed as ever."
 			]);
 		}
+		
+		if(subject.inCover)
+			subject.getUp();
+		else
+			postPrepare();
+	}
+
+	public override function postPrepare(){
+		subject.gotoAndPlay(362);
 	}
 }

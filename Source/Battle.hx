@@ -62,7 +62,7 @@ class Battle extends Sprite {
 		cover = new Array<Cover>();
 		generateCover();
 
-		for(i in 0...4){
+		for(i in 0...1){
 			var soldier = new Soldier(0, soldierNames[i], 650 + Std.int(Math.random()*80), 100*i+80);
 			soldiers.push(soldier);
 			alliesSoldiers.push(soldier);

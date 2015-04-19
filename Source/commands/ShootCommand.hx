@@ -45,11 +45,14 @@ class ShootCommand extends Command {
 			return;
 		}
 
-		if(target.inCover && !target.shooting){
+		if(target.inCover && target.shooting) hit = Math.random()>.6;
+		else if(target.inCover) hit = false;
+
+		if(target.inCover && !hit){
 			battle.transcript += SentenceParser.chooseRandom([
-				" The bullet is stopped short by "+SentenceParser.possessive(target.lastName)+" cover."
+				" The bullet is stopped short by "+SentenceParser.possessive(target.lastName)+" cover.",
+				" The bullet hits the cover in front of him."
 			]);
-			success = false;
 			hitCover = true;
 			return;
 		}
@@ -63,7 +66,7 @@ class ShootCommand extends Command {
 						" The bullet hits its mark.",
 						" "+target.lastName+" takes a hard hit."
 					]);
-					if(critical) battle.transcript += " It's a critical hit!";
+					if(critical) battle.transcript += " It hits critically.";
 				}
 				else
 					battle.transcript += SentenceParser.chooseRandom([
@@ -98,15 +101,17 @@ class ShootCommand extends Command {
 		var trail = new Sprite();
 
 		trail.graphics.lineStyle(2, 0xffffff);
-		trail.graphics.moveTo(subject.x - 30 + subject.alignment*100, subject.y - 5);
-		if(hit)
+		trail.graphics.moveTo(subject.x - 30 + subject.alignment*100 + (subject.inCover?-8:0), subject.y - 5 + (subject.inCover?15:0));
+		if(hitCover)
+			trail.graphics.lineTo(target.x-80-30*target.alignment, target.y+20);
+		else if(hit)
 			trail.graphics.lineTo(target.x+15-5*target.alignment, target.y);
 		else
 			trail.graphics.lineTo(target.x+100-200*target.alignment, target.y+Math.random()*200-100);
 
 		battle.addBulletTrail(trail);
 
-		if(!hit) return;
+		if(!hit || hitCover) return;
 
 		ParticleEngine.bloodSpray(target.x+15, target.y, target.alignment>0?-1:1);
 		for(i in 0...5)

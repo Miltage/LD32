@@ -14,6 +14,14 @@ class ReloadCommand extends Command {
 			return;
 		}
 
+		if(subject.inCover)
+			subject.getUp();
+		else
+			postPrepare();
+
+	}
+
+	public override function postPrepare(){
 		subject.gotoAndPlay(403);	
 	}
 }

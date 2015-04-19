@@ -6,6 +6,7 @@ class Command {
 	public var target:Soldier;
 	public var complete:Bool = false;
 	public var drawn:Bool = false;
+	public var post:Bool = false;
 
 	private var battle:Battle;
 	
@@ -21,5 +22,9 @@ class Command {
 
 	public function drawEffects(){
 		drawn = true;
+	}
+
+	public function postCommand(){
+		post = true;
 	}
 }

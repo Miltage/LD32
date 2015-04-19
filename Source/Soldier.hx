@@ -22,6 +22,8 @@ class Soldier extends Sprite {
 	public var alive:Bool;
 	public var jammed:Bool;
 	public var bullets:Int = 3;
+	public var inCover:Bool;
+	public var shooting:Bool;
 
 	public var command:Command;
 
@@ -42,6 +44,8 @@ class Soldier extends Sprite {
 		this.y = y;
 		alive = true;
 		jammed = false;
+		inCover = false;
+		shooting = false;
 
 		var format = new TextFormat("Arial");
 		format.align = TextFormatAlign.CENTER;
@@ -88,18 +92,21 @@ class Soldier extends Sprite {
 			}
 			addChild(body);
 		});
-		
+
 	}
 
 	public function update(){
 		healthBar.width = HEALTHBAR_WIDTH*(health/maxHealth);
 
-		if(targetPos != null){
+		if(targetPos != null && alive){
 			var d:Point = targetPos.subtract(new Point(x, y));
 			if(d.length < 2){
 				targetPos = null;
 				moving = false;
-				body.gotoAndPlay("idle");
+				if(command != null && !command.post)
+					command.postCommand();
+				else
+					body.gotoAndPlay("idle");
 			}else{				
 				x += d.x/d.length*2;
 				y += d.y/d.length*2;
@@ -115,9 +122,9 @@ class Soldier extends Sprite {
 			body.gotoAndPlay("idle");
 		else if(body != null && body.currentFrame == 131)
 			body.gotoAndPlay("walk");
-		else if(body != null && body.currentFrame == 142 && command != null)
+		else if(body != null && (body.currentFrame == 142 || body.currentFrame == 540) && command != null)
 			command.drawEffects();
-		else if(body != null && body.currentFrame == 243)
+		else if(body != null && (body.currentFrame == 243 || body.currentFrame == 515 || body.currentFrame == 545 || body.currentFrame == 564))
 			body.stop();
 		else if(body != null && body.currentFrame == 265)
 			body.gotoAndPlay(252);
@@ -149,6 +156,14 @@ class Soldier extends Sprite {
 		for(i in 0...bullets)
 			bulletsCounter.graphics.drawRect(alignment*-60, 0-i*5, 6, 2);
 		bulletsCounter.graphics.endFill();
+	}
+
+	public function moveTo(x:Float, y:Float){
+		targetPos = new Point(x, y);
+	}
+
+	public function getFrame(){
+		return body.currentFrame;
 	}
 
 }

@@ -45,6 +45,8 @@ class SentenceParser {
 				case "waits": command = new Command(subject, target, battle);
 				case "yells": command = new YellCommand(subject, target, battle);
 				case "reloads": command = new ReloadCommand(subject, target, battle);
+				case "ducks": command = new DuckCommand(subject, target, battle);
+
 			}
 
 			if(command == null)
@@ -53,6 +55,7 @@ class SentenceParser {
 			// Two word actions
 			switch(action){
 				case "does nothing": command = new Command(subject, target, battle);
+				case "takes cover": command = new CoverCommand(subject, target, battle);
 			}
 
 			if(command == null)
@@ -61,6 +64,7 @@ class SentenceParser {
 			// Three word actions
 			switch(action){
 				case "flips the bird": command = new FlipBirdCommand(subject, target, battle);
+				case "runs for cover": command = new CoverCommand(subject, target, battle);
 			}
 
 			if(command != null){

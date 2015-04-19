@@ -25,6 +25,7 @@ class Battle extends Sprite {
 	public var soldiers:Array<Soldier>;
 	public var axisSoldiers:Array<Soldier>;
 	public var alliesSoldiers:Array<Soldier>;
+	public var cover:Array<Cover>;
 	public var turn:Int = 0;
 
 	public var transcript:String;
@@ -58,6 +59,7 @@ class Battle extends Sprite {
 		alliesSoldiers = new Array<Soldier>();
 		var soldierNames = NameGenerator.getNames(4);
 
+		cover = new Array<Cover>();
 		generateCover();
 
 		for(i in 0...4){
@@ -221,16 +223,20 @@ class Battle extends Sprite {
 	private function generateCover(){
 		var count:Int = 0;
 		for(i in 0...4){
-			if(Math.random()>.5 || 4-count < i){
-				addChild(new Cover(220, 100 + 120 * i, 1));
+			if(Math.random()>.5 || i == 3 && count == 0){
+				var c = new Cover(220, 100 + 120 * i, 1);
+				cover.push(c);
+				addChild(c);
 				count++;
 			}
 		}
 
 		count = 0;
 		for(i in 0...4){
-			if(Math.random()>.5 || 4-count < i){
-				addChild(new Cover(580, 100 + 120 * i, 0));
+			if(Math.random()>.5 || i == 3 && count == 0){
+				var c = new Cover(580, 100 + 120 * i, 0);
+				cover.push(c);
+				addChild(c);
 				count++;
 			}
 		}

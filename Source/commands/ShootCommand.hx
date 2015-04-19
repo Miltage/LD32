@@ -7,6 +7,7 @@ class ShootCommand extends Command {
 	private var success:Bool = false;
 	private var hit:Bool = false;
 	private var critical:Bool = false;
+	private var hitCover:Bool = false;
 	
 	public function new(subject, target, battle){
 		super(subject, target, battle);
@@ -14,7 +15,14 @@ class ShootCommand extends Command {
 
 	public override function perform(){
 		super.perform();
-		subject.gotoAndPlay(132);
+		if(subject.inCover && subject.getFrame() < 516)
+			subject.gotoAndPlay(516);
+		else if(subject.inCover)
+			subject.gotoAndPlay(532);
+		else
+			subject.gotoAndPlay(132);
+
+		subject.shooting = true;
 
 		success = Math.random()>.05;
 		hit = Math.random()>.2;
@@ -37,6 +45,15 @@ class ShootCommand extends Command {
 			return;
 		}
 
+		if(target.inCover && !target.shooting){
+			battle.transcript += SentenceParser.chooseRandom([
+				" The bullet is stopped short by "+SentenceParser.possessive(target.lastName)+" cover."
+			]);
+			success = false;
+			hitCover = true;
+			return;
+		}
+
 		if(success){
 			if(hit){
 				target.takeDamage(2+Math.random()*2 + (critical?3:0));
@@ -52,7 +69,7 @@ class ShootCommand extends Command {
 					battle.transcript += SentenceParser.chooseRandom([
 						" A deadly blow.",
 						" The soldier collapses, dead.",
-						" Death comes swiftly to the recipient."
+						" Death comes swiftly to the recipient.",
 						" "+SentenceParser.possessive(target.lastName)+" life ends abruptly."
 					]);
 			}else{

@@ -19,15 +19,15 @@ class AI {
 
 		if(subject.jammed){
 			command = new UnjamCommand(subject, target, battle);
-			battle.transcript += "Enemy soldier attempts to unjam his weapon.";
+			battle.transcript += "An enemy soldier attempts to unjam his weapon.";
 		}
 		else if(subject.bullets == 0){
 			command = new ReloadCommand(subject, target, battle);
-			battle.transcript += "Enemy soldier reloads his weapon.";
+			battle.transcript += "An enemy soldier reloads his weapon.";
 		}
 		else{
 			command = new ShootCommand(subject, target, battle);
-			battle.transcript += "Enemy soldier shoots at "+target.lastName+".";
+			battle.transcript += "An enemy soldier shoots at "+target.lastName+".";
 		}
 
 		subject.command = command;

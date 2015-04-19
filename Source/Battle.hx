@@ -16,6 +16,7 @@ import openfl.display.MovieClip;
 
 class Battle extends Sprite {
 
+	public static var instance:Battle;
 	public static var effects:Sprite;
 	public static var groundEffects:Sprite;
 	public static var running:Bool = true;
@@ -35,9 +36,11 @@ class Battle extends Sprite {
 	private var writer:MovieClip;
 
 	private var bulletTrails:Array<Sprite>;
+	private var extras:Array<Extra>;
 
 	public function new(){
 		super();
+		instance = this;
 
 		Font.registerFont (DefaultFont);
 		ai = new AI(this);
@@ -45,6 +48,9 @@ class Battle extends Sprite {
 
 		var format = new TextFormat ("Traveling _Typewriter", 18, 0x111);
 		format.align = openfl.text.TextFormatAlign.CENTER;
+
+		effects = new Sprite();
+		groundEffects = new Sprite();
 
 		// setup battlefield
 		soldiers = new Array<Soldier>();
@@ -60,7 +66,7 @@ class Battle extends Sprite {
 		}
 
 		for(i in 0...4){
-			var soldier = new Soldier(1, "Enemy Soldier", 80 + Std.int(Math.random()*100), 100*i+80);
+			var soldier = new Soldier(1, "Enemy Soldier "+(i+1), 80 + Std.int(Math.random()*100), 100*i+80);
 			soldiers.push(soldier);
 			axisSoldiers.push(soldier);
 			addChild(soldier);
@@ -101,13 +107,12 @@ class Battle extends Sprite {
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
 			var bg = cast(loader.content, MovieClip);
 			addChildAt(bg, 0);
-			groundEffects = new Sprite();
 			addChildAt(groundEffects, 1);
 		});
 
-		effects = new Sprite();
 		addChild(effects);
 		bulletTrails = new Array<Sprite>();
+		extras = new Array<Extra>();
 	}
 
 	private function handleInput(t:TextEvent){
@@ -140,6 +145,8 @@ class Battle extends Sprite {
 
 	private function update(e:Event){
 		effects.graphics.clear();
+		ParticleEngine.draw();
+
 		if(wait > 0) wait--;
 
 		for(soldier in soldiers){
@@ -182,7 +189,14 @@ class Battle extends Sprite {
 
 		for(trail in bulletTrails){
 			trail.alpha -= 0.08;
+			if(trail.alpha <= 0 && effects.contains(trail)){
+				effects.removeChild(trail);
+				bulletTrails.remove(trail);
+			}
 		}
+
+		for(extra in extras)
+			extra.update();
 
 	}
 
@@ -232,6 +246,11 @@ class Battle extends Sprite {
 
 	public function addBulletTrail(trail){
 		bulletTrails.push(trail);
-		addChild(trail);
+		effects.addChild(trail);
+	}
+
+	public function addBloodPuddle(puddle){
+		extras.push(puddle);
+		groundEffects.addChild(puddle);
 	}
 }

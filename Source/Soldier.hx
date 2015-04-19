@@ -14,7 +14,7 @@ class Soldier extends Sprite {
 
 	public static inline var HEALTHBAR_WIDTH = 60;
 	
-	public var health:Int = 10;
+	public var health:Int = 1;
 	public var maxHealth:Int = 10;
 	public var alignment:Int;
 	public var lastName:String;

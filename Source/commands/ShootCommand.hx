@@ -90,7 +90,15 @@ class ShootCommand extends Command {
 
 		if(!hit) return;
 
+		ParticleEngine.bloodSpray(target.x+15, target.y, target.alignment>0?-1:1);
+		for(i in 0...5)
+			battle.addBloodPuddle(new BloodPuddle(target.x+30 + Math.random()*20-10, target.y+60 + Math.random()*20-10, Std.int(5+Math.random()*10)));
+
 		if(target.alive) target.gotoAndPlay(156);
-		else target.gotoAndPlay(209);
+		else{
+			target.gotoAndPlay(209);
+			for(i in 0...5)
+				battle.addBloodPuddle(new BloodPuddle(target.x+30 + Math.random()*20-10 - 50 + 100*target.alignment, target.y+60 + Math.random()*20-10, Std.int(10+Math.random()*10), 25));
+		}
 	}
 }

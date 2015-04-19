@@ -1,5 +1,7 @@
 package commands;
 
+import flash.display.Sprite;
+
 class ShootCommand extends Command {
 
 	private var success:Bool = false;
@@ -75,12 +77,16 @@ class ShootCommand extends Command {
 		super.drawEffects();
 		if(!success) return;
 
-		Battle.effects.graphics.lineStyle(2, 0xffffff);
-		Battle.effects.graphics.moveTo(subject.x - 30 + subject.alignment*100, subject.y - 5);
+		var trail = new Sprite();
+
+		trail.graphics.lineStyle(2, 0xffffff);
+		trail.graphics.moveTo(subject.x - 30 + subject.alignment*100, subject.y - 5);
 		if(hit)
-			Battle.effects.graphics.lineTo(target.x, target.y);
+			trail.graphics.lineTo(target.x+15-5*target.alignment, target.y);
 		else
-			Battle.effects.graphics.lineTo(target.x+100-200*target.alignment, target.y+Math.random()*200-100);
+			trail.graphics.lineTo(target.x+100-200*target.alignment, target.y+Math.random()*200-100);
+
+		battle.addBulletTrail(trail);
 
 		if(!hit) return;
 

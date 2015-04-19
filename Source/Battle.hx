@@ -34,6 +34,8 @@ class Battle extends Sprite {
 	private var wait:Int = 0;
 	private var writer:MovieClip;
 
+	private var bulletTrails:Array<Sprite>;
+
 	public function new(){
 		super();
 
@@ -105,6 +107,7 @@ class Battle extends Sprite {
 
 		effects = new Sprite();
 		addChild(effects);
+		bulletTrails = new Array<Sprite>();
 	}
 
 	private function handleInput(t:TextEvent){
@@ -177,6 +180,10 @@ class Battle extends Sprite {
 			writer.gotoAndPlay(66);
 		}
 
+		for(trail in bulletTrails){
+			trail.alpha -= 0.08;
+		}
+
 	}
 
 	private function showEnding(victors){
@@ -221,5 +228,10 @@ class Battle extends Sprite {
 		for(s in alliesSoldiers)
 			if(s.alive) return true;
 		return false;
+	}
+
+	public function addBulletTrail(trail){
+		bulletTrails.push(trail);
+		addChild(trail);
 	}
 }

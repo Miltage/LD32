@@ -16,19 +16,20 @@ class Battle extends Sprite {
 	public static var instance:Battle;
 	public static var effects:Sprite;
 	public static var groundEffects:Sprite;
-	public static var running:Bool = true;
+	public static var running:Bool = false;
+	public static var show:Bool = false;
 
 	public var soldiers:Array<Soldier>;
 	public var axisSoldiers:Array<Soldier>;
 	public var alliesSoldiers:Array<Soldier>;
 	public var cover:Array<Cover>;
 	public var turn:Int = 0;
+	public var bg:MovieClip;
 
 	private var ai:AI;
-	private var timeSinceType:Int = 100;
-	private var typistCount:Int = 0;
 	private var wait:Int = 0;
-	private var writer:MovieClip;
+	private var endWait:Int = 0;
+	private var ended:Bool = false;
 
 	private var bulletTrails:Array<Sprite>;
 	private var extras:Array<Extra>;
@@ -48,50 +49,21 @@ class Battle extends Sprite {
 		soldiers = new Array<Soldier>();
 		axisSoldiers = new Array<Soldier>();
 		alliesSoldiers = new Array<Soldier>();
-		var soldierNames = NameGenerator.getNames(4);
 
 		cover = new Array<Cover>();
-		generateCover();
-
-		for(i in 0...4){
-			var soldier = new Soldier(0, soldierNames[i], 650 + Std.int(Math.random()*80), 100*i+80);
-			soldiers.push(soldier);
-			alliesSoldiers.push(soldier);
-			holder.addChild(soldier);
-		}
-
-		for(i in 0...4){
-			var soldier = new Soldier(1, "Enemy Soldier "+(i+1), 40 + Std.int(Math.random()*80), 100*i+80);
-			soldiers.push(soldier);
-			axisSoldiers.push(soldier);
-			holder.addChild(soldier);
-		}
-
-		
+		generateCover();		
 
 		Lib.current.stage.focus = Main.field;
 
-		Main.field.addEventListener(TextEvent.TEXT_INPUT, handleInput);
 		this.addEventListener(Event.ENTER_FRAME, update);
-
-		var bytes = Assets.getBytes("assets/writer.swf");
-		var loader:Loader = new Loader();
-		loader.loadBytes(bytes);
-		
-		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
-			writer = cast(loader.content, MovieClip);
-			writer.x = 300;
-			writer.y = 380;
-			addChild(writer);
-		});
 
 		var bytes = Assets.getBytes("assets/scene.swf");
 		var loader:Loader = new Loader();
 		loader.loadBytes(bytes);
 		
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
-			var bg = cast(loader.content, MovieClip);
-			bg.gotoAndStop(2);
+			bg = cast(loader.content, MovieClip);
+			bg.stop();
 			addChildAt(bg, 0);
 			addChildAt(groundEffects, 1);
 		});
@@ -102,21 +74,47 @@ class Battle extends Sprite {
 		extras = new Array<Extra>();
 	}
 
-	private function handleInput(t:TextEvent){
-		timeSinceType = 0;
-		if(t.text == "." || t.text == "?" || t.text == "!"){
-			Main.transcript = Main.field.text + t.text;
-			// End player turn
-			if(parseLastSentence()){
-				Main.field.type = TextFieldType.DYNAMIC;
-				Main.field.text += " ";
-				Main.transcript += " ";
-				wait = 50;
+	public function createSoldiers(m){
 
-				if(anyAxisAlive()){
-					turn = 1;
-					ai.takeTurn();
-				}
+		var amount = 4;
+
+		if(m == "one" || m == "1") amount = 1;
+		else if(m == "two" || m == "2") amount = 2;
+		else if(m == "three" || m == "3") amount = 3;
+		else if(m == "four" || m == "4") amount = 4;
+		else if(m == "five" || m == "5") amount = 5;
+		else if(m == "six" || m == "6") amount = 6;
+
+		var soldierNames = NameGenerator.getNames(amount);
+
+		for(i in 0...amount){
+			var soldier = new Soldier(0, soldierNames[i], 650 + Std.int(Math.random()*80), Std.int((400/amount)*i+80));
+			soldiers.push(soldier);
+			alliesSoldiers.push(soldier);
+			holder.addChild(soldier);
+		}
+
+		for(i in 0...amount){
+			var soldier = new Soldier(1, "Enemy Soldier "+(i+1), 40 + Std.int(Math.random()*80), Std.int((400/amount)*i+80));
+			soldiers.push(soldier);
+			axisSoldiers.push(soldier);
+			holder.addChild(soldier);
+		}
+
+		running = true;
+	}
+
+	public function playerTakeTurn(){
+		if(parseLastSentence()){
+			Main.started = true;
+			Main.field.type = TextFieldType.DYNAMIC;
+			Main.field.text += " ";
+			Main.transcript += " ";
+			wait = 50;
+
+			if(anyAxisAlive()){
+				turn = 1;
+				ai.takeTurn();
 			}
 		}
 	}
@@ -131,20 +129,32 @@ class Battle extends Sprite {
 	}
 
 	private function update(e:Event){
+		if(ended) return;
+
 		effects.graphics.clear();
 		ParticleEngine.draw();
 
 		if(wait > 0) wait--;
+		if(endWait > 0) endWait--;
+
+		if(endWait == 400 && Main.started && !running){
+			Main.transcript += "\n\nTHE END.";
+			if(numAlliedAlive() == alliesSoldiers.length) endWait = 100;
+		}
+		else if(endWait == 300 && Main.started && !running){
+			var dead = new Array<String>();
+			for(s in alliesSoldiers)
+				if(!s.alive) dead.push(s.lastName);
+			if(dead.length>0) Main.transcript += "\n\nIn loving memory of "+SentenceParser.formatList(dead)+".";
+		}
+		else if(endWait == 0 && Main.started && !running){
+			Main.started = false;
+			ended = true;
+			Main.instance.restart();
+		}
 
 		for(soldier in soldiers){
 			soldier.update();
-		}
-
-		typistCount++;
-		if(Main.transcript.length > Main.field.text.length && typistCount % 2 == 0){
-			Main.field.text += Main.transcript.charAt(Main.field.text.length);
-			Main.field.setSelection(Main.field.text.length, Main.field.text.length);
-			timeSinceType = 0;
 		}
 
 		// End enemy turn
@@ -157,21 +167,11 @@ class Battle extends Sprite {
 			Main.field.setSelection(Main.field.text.length, Main.field.text.length);
 			Lib.current.stage.focus = Main.field;
 		}
-		else if(!anyAlliedAlive() && running && ai.command.drawn){
+		else if(!anyAlliedAlive() && running && ai.command.drawn && Main.started){
 			showEnding(1);
 		}
-		else if(!anyAxisAlive() && turn == 0 && Main.transcript.length == Main.field.text.length && wait == 0 && running){
+		else if(!anyAxisAlive() && turn == 0 && Main.transcript.length == Main.field.text.length && wait == 0 && running && Main.started){
 			showEnding(0);
-		}
-
-		// Writer animation logic
-		timeSinceType++;
-		if(writer != null && writer.currentFrame == 20 && timeSinceType > 20){
-			writer.gotoAndPlay(1);
-		}else if(writer != null && writer.currentFrame == 65 && timeSinceType < 10){
-			writer.gotoAndPlay(38);
-		}else if(writer != null && writer.currentFrame > 20 && writer.currentFrame < 66 && timeSinceType > 20){
-			writer.gotoAndPlay(66);
 		}
 
 		for(trail in bulletTrails){
@@ -205,6 +205,7 @@ class Battle extends Sprite {
 			if(soldier.alive) soldier.gotoAndPlay(Math.random()>.5?244:266);
 		}
 
+		endWait = 500;
 		running = false;
 	}
 

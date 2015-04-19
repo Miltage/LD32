@@ -80,6 +80,7 @@ class Soldier extends Sprite {
 		addChild(bulletsCounter);
 
 		var bytes = Assets.getBytes("assets/soldier.swf");
+		if(alignment == 1) bytes = Assets.getBytes("assets/soldier_axis.swf");
 		var loader:Loader = new Loader();
 		loader.loadBytes(bytes);
 		

@@ -85,4 +85,49 @@ class SentenceParser {
 		if(StringTools.endsWith(name, "s")) return name+"'";
 		return name+"'s";
 	}
+
+	public static function parseSetting(s:String, battle:Battle){
+
+		if(~/\b(inside|outside)\b/gi.match(s)){
+			if(Main.step == 0){
+				var regex = ~/\b(inside)\b/gi;
+				if(!regex.match(s))
+					battle.bg.gotoAndStop(2);
+				Main.showHint("Good! Now say something about how many soldiers there were.");
+				Battle.show = true;
+				Main.step++;
+			}else
+				Main.showHint("Alright, we know where the battle took place. Say something about the number of soldiers now.");
+		}
+		else if(~/\b(soldiers|soldier)\b/gi.match(s)){
+			var regex = ~/\b(1|2|3|4|5|6|one|two|three|four|five|six)\b/gi;
+			if(!regex.match(s)){
+				Main.showHint("Try something else.");
+				return;
+			}
+			var amount = regex.matched(1);
+			battle.createSoldiers(amount);
+			if(Main.step == 1){
+				Main.showHint("Great! Now you can start writing about the battle. \nTry \"(Soldier Name) fires his weapon.\"");
+				Main.step++;
+			}else
+				Main.showHint("Try something else.");
+		}
+	}
+
+	public static function formatList(list:Array<String>){
+		var result = "";
+
+		if(list.length == 1) return list[0];
+
+		for(i in 0...list.length-1){
+			result += list[i]+", ";
+		}
+		result = result.substr(0, result.length-2);
+
+		result += " and "+list[list.length-1];
+
+		return result;
+
+	}
 }

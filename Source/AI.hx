@@ -25,6 +25,18 @@ class AI {
 			command = new ReloadCommand(subject, target, battle);
 			battle.transcript += "An enemy soldier reloads his weapon.";
 		}
+		else if(subject.inCover && subject.shooting && Math.random()>.6){
+			command = new DuckCommand(subject, target, battle);			
+			battle.transcript += "An enemy soldier ducks behind cover.";
+		}
+		else if(coverAvailable() && !subject.inCover && Math.random()>.4){
+			command = new CoverCommand(subject, target, battle);
+			battle.transcript += SentenceParser.chooseRandom([
+				" An enemy soldier runs for cover.",
+				" An enemy soldier runs behind some nearby cover.",
+				" An enemy soldier takes refuge behind some cover."
+			]);
+		}
 		else{
 			command = new ShootCommand(subject, target, battle);
 			if(battle.numAxisAlive() == 1) battle.transcript += "The last remaining enemy soldier";
@@ -40,5 +52,12 @@ class AI {
 		command.perform();
 
 		battle.transcript += " ";
+	}
+
+	public function coverAvailable(){
+		for(c in battle.cover)
+			if(c.alignment == 1 && c.occupant == null)
+				return true;
+		return false;
 	}
 }

@@ -9,6 +9,7 @@ class DuckCommand extends Command {
 	}
 
 	public override function perform(){
+		super.perform();
 		if(!subject.inCover){
 			battle.transcript += " He finds nothing for him to duck behind.";
 			return;

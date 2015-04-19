@@ -12,14 +12,16 @@ class Particle {
 
 	private var deltaSize:Float;
 	private var startY:Float;
+	private var color:UInt;
 
-	public function new(x:Float, y:Float, vx:Float, vy:Float, size:Float, ?deltaSize:Float){
+	public function new(x:Float, y:Float, vx:Float, vy:Float, size:Float, ?deltaSize:Float, ?color:UInt=0xcc0000){
 		this.x = x;
 		this.y = startY = y;
 		this.vx = vx;
 		this.vy = vy;
 		this.size = size;
 		this.deltaSize = deltaSize;
+		this.color = color;
 
 		remove = false;
 	}
@@ -38,7 +40,7 @@ class Particle {
 	}
 
 	public function draw(){
-		Battle.effects.graphics.beginFill(0xcc0000);
+		Battle.effects.graphics.beginFill(color);
 		Battle.effects.graphics.drawCircle(x, y, size);
 		Battle.effects.graphics.endFill();
 	}

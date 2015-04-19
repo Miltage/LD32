@@ -18,4 +18,9 @@ class ParticleEngine {
 		for(i in 0...60)
 			particles.push(new Particle(x, y, Math.random()*2*dir, Math.random()*5-2.5, 0.5+Math.random()*4, -0.1+Math.random()*-0.2));
 	}
+
+	public static function bulletHit(x, y, dir){
+		for(i in 0...60)
+			particles.push(new Particle(x, y, Math.random()*2*dir, Math.random()*5-2.5, 0.5+Math.random()*4, -0.1+Math.random()*-0.2, 0x888888));
+	}
 }

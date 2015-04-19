@@ -9,6 +9,7 @@ class LeaveCoverCommand extends Command {
 	}
 
 	public override function perform(){
+		super.perform();
 		if(!subject.inCover){
 			battle.transcript += " He's not even in cover. He decides to leave spiritually instead.";
 			return;

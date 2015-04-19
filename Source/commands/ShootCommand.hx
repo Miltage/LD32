@@ -54,6 +54,7 @@ class ShootCommand extends Command {
 				" The bullet hits the cover in front of him."
 			]);
 			hitCover = true;
+			subject.bullets--;
 			return;
 		}
 
@@ -102,8 +103,10 @@ class ShootCommand extends Command {
 
 		trail.graphics.lineStyle(2, 0xffffff);
 		trail.graphics.moveTo(subject.x - 30 + subject.alignment*100 + (subject.inCover?-8:0), subject.y - 5 + (subject.inCover?15:0));
-		if(hitCover)
-			trail.graphics.lineTo(target.x-80-30*target.alignment, target.y+20);
+		if(hitCover){
+			trail.graphics.lineTo(target.x-80+160*target.alignment, target.y+20);
+			ParticleEngine.bulletHit(target.x-80+160*target.alignment, target.y, target.alignment>0?-1:1);
+		}
 		else if(hit)
 			trail.graphics.lineTo(target.x+15-5*target.alignment, target.y);
 		else

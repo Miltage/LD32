@@ -9,6 +9,7 @@ class CoverCommand extends Command {
 	}
 
 	public override function perform(){
+		super.perform();
 		if(subject.inCover){
 			battle.transcript += " He decides against it, seeing as he is already in cover.";
 			return;
@@ -23,7 +24,7 @@ class CoverCommand extends Command {
 
 		if(possibilities.length == 0){
 			battle.transcript += SentenceParser.chooseRandom([
-				" He sees that there is nowhere for him to take cover..",
+				" He sees that there is nowhere for him to take cover.",
 				" He finds all the available spots for cover occupied."
 			]);
 			return;
@@ -36,7 +37,7 @@ class CoverCommand extends Command {
 		});
 
 		var cover = possibilities[0];
-		subject.moveTo(cover.x+50, cover.y-55);
+		subject.moveTo(cover.x+50+subject.alignment*-130, cover.y-55);
 		cover.occupant = subject;
 		subject.cover = cover;
 	}

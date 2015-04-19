@@ -218,30 +218,47 @@ class Battle extends Sprite {
 
 	// Convenience functions //
 
-	public function getRandomAxisSoldier(){
+	public function getRandomAxisSoldier():Soldier {
 		var s = axisSoldiers[Std.int(Math.random()*(axisSoldiers.length))];
 		while(!s.alive)
 			s = axisSoldiers[Std.int(Math.random()*(axisSoldiers.length))];
 		return s;
 	}
 
-	public function getRandomAlliedSoldier(){
+	public function getRandomAlliedSoldier():Soldier {
 		var s = alliesSoldiers[Std.int(Math.random()*(alliesSoldiers.length))];
 		while(!s.alive)
 			s = alliesSoldiers[Std.int(Math.random()*(alliesSoldiers.length))];
 		return s;
 	}
 
-	public function anyAxisAlive(){
-		for(s in axisSoldiers)
-			if(s.alive) return true;
-		return false;
+	public function getSoldierByName(n:String):Soldier {
+		for(s in soldiers)
+			if(s.lastName.toLowerCase() == n.toLowerCase())
+				return s;
+		return null;
 	}
 
-	public function anyAlliedAlive(){
+	public function numAxisAlive():Int {
+		var count:Int = 0;
+		for(s in axisSoldiers)
+			if(s.alive) count++;
+		return count;
+	}
+
+	public function anyAxisAlive():Bool {
+		return numAxisAlive()>0;
+	}
+
+	public function numAlliedAlive():Int {
+		var count:Int = 0;
 		for(s in alliesSoldiers)
-			if(s.alive) return true;
-		return false;
+			if(s.alive) count++;
+		return count;
+	}
+
+	public function anyAlliedAlive():Bool {
+		return numAlliedAlive()>0;
 	}
 
 	public function addBulletTrail(trail){

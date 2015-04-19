@@ -29,6 +29,10 @@ class SentenceParser {
 
 			var action:String = parts[1];
 
+			var object:String = parts[parts.length-3] + " " + parts[parts.length-2] + " " + parts[parts.length-1];
+
+			target = battle.getSoldierByName(object);
+
 			if(target == null){
 				target = battle.getRandomAxisSoldier();
 			}

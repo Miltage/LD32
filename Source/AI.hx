@@ -27,7 +27,9 @@ class AI {
 		}
 		else{
 			command = new ShootCommand(subject, target, battle);
-			battle.transcript += "An enemy soldier shoots at "+target.lastName+".";
+			if(battle.numAxisAlive() == 1) battle.transcript += "The last remaining enemy soldier";
+			else battle.transcript += Math.random()>.5?"An enemy soldier":"One of the enemy soldiers";
+			battle.transcript += " shoots at "+target.lastName+".";
 		}
 
 		subject.command = command;

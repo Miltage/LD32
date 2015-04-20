@@ -12,8 +12,12 @@ import openfl.text.Font;
 import openfl.text.TextFormat;
 import openfl.events.TextEvent;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
 import openfl.Lib;
 import openfl.Assets;
+import openfl.media.Sound;
+import flash.media.SoundMixer;
+import flash.media.SoundTransform;
 
 @:font("assets/TravelingTypewriter.ttf") class DefaultFont extends Font {}
 
@@ -35,6 +39,12 @@ class Main extends Sprite {
 	private var writer:MovieClip;
 	private var bg:Sprite;
 
+	private var typingSounds:Array<Sound>;
+	private var theme:Sound;
+
+	private var gramophone:Sprite;
+	private var gclip:MovieClip;
+
 	public function new () {
 		
 		super ();
@@ -45,6 +55,14 @@ class Main extends Sprite {
 		Font.registerFont (DefaultFont);
 
 		addEventListener(Event.ENTER_FRAME, update);
+
+		typingSounds = new Array<Sound>();
+		typingSounds[0] = Assets.getSound("assets/type1.mp3");
+		typingSounds[1] = Assets.getSound("assets/type2.mp3");
+		typingSounds[2] = Assets.getSound("assets/type3.mp3");
+		theme = Assets.getSound("assets/mightywriter.mp3");
+
+		theme.play(0, 10000);
 	}
 
 	public function init(){
@@ -55,7 +73,7 @@ class Main extends Sprite {
 		Battle.show = false;
 		Battle.running = false;
 
-		Main.transcript = "";//The Mighty Writer.\n A game made in 48 hours for Ludum Dare 32: An Unconventional Weapon.";
+		Main.transcript = "The Mighty Writer.\n A game made in 48 hours for Ludum Dare 32: An Unconventional Weapon.";
 
 		bg = new Sprite();
 		bg.graphics.beginFill(0x111111);
@@ -114,6 +132,25 @@ class Main extends Sprite {
 			addChild(writer);
 		});
 
+		var bytes = Assets.getBytes("assets/gramophone.swf");
+		var loader:Loader = new Loader();
+		loader.loadBytes(bytes);
+		
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(_) {
+			gclip = cast(loader.content, MovieClip);
+			gclip.stop();
+			gramophone = new Sprite();
+			gramophone.addChild(gclip);
+			gramophone.x = 480;
+			gramophone.y = 480;
+			gramophone.buttonMode = true;
+			addChild(gramophone);
+
+			gramophone.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
+			gramophone.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
+			gramophone.addEventListener(MouseEvent.MOUSE_UP, mouseClick);
+		});
+
 		showHint("You are an author recounting a war story.");
 		showHint("Start your story with the battle location (indoors/outdoors).");
 		showHint("Example: \"The battle took place outside.\"");
@@ -132,10 +169,11 @@ class Main extends Sprite {
 		else if(fadeWait > 0 && Main.started) fadeWait--;
 
 		typistCount++;
-		if(transcript.length > field.text.length && typistCount % 2 == 0){
+		if(transcript.length > field.text.length && typistCount % 3 == 0){
 			field.text += transcript.charAt(field.text.length);
 			field.setSelection(field.text.length, field.text.length);
 			timeSinceType = 0;
+			if(typistCount % 6 == 0)typingSounds[Std.int(Math.random()*3)].play(0, 0, new openfl.media.SoundTransform(0.5));
 		}
 
 		// Writer animation logic
@@ -152,6 +190,7 @@ class Main extends Sprite {
 
 	private function handleInput(t:TextEvent){
 		timeSinceType = 0;
+		typingSounds[Std.int(Math.random()*3)].play(0, 0, new openfl.media.SoundTransform(0.5));
 
 		if(t.text == "." || t.text == "?" || t.text == "!"){
 			Main.transcript = Main.field.text + t.text;
@@ -180,6 +219,24 @@ class Main extends Sprite {
 		var r = ~/[\r|\n]+/gi;
 		sentence = r.replace(sentence, " ");
 		return SentenceParser.parseSetting(sentence, battle);
+	}
+
+	private function mouseOver(m:MouseEvent){
+		gclip.gotoAndStop(2);
+	}
+
+	private function mouseOut(m:MouseEvent){
+		gclip.gotoAndStop(1);
+	}
+
+	private function mouseClick(m:MouseEvent){
+		Main.mute = !Main.mute;
+
+		if(Main.mute)
+			SoundMixer.soundTransform = new SoundTransform(0);
+		else
+			SoundMixer.soundTransform = new SoundTransform(1);
+		
 	}
 	
 	

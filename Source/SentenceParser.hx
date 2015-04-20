@@ -47,7 +47,7 @@ class SentenceParser {
 				case "reloads": command = new ReloadCommand(subject, target, battle);
 				case "ducks": command = new DuckCommand(subject, target, battle);
 				case "leaves": command = new LeaveCoverCommand(subject, target, battle);
-
+				case "disrespects": command = new FlipBirdCommand(subject, target, battle);
 			}
 
 			if(command == null)
@@ -88,9 +88,9 @@ class SentenceParser {
 
 	public static function parseSetting(s:String, battle:Battle){
 
-		if(~/\b(inside|outside)\b/gi.match(s)){
+		if(~/\b(inside|outside|indoors|outdoors)\b/gi.match(s)){
 			if(Main.step == 0){
-				var regex = ~/\b(inside)\b/gi;
+				var regex = ~/\b(inside|indoors)\b/gi;
 				if(!regex.match(s))
 					battle.bg.gotoAndStop(2);
 				Main.showHint("Good! Now say something about how many soldiers there were.");
@@ -102,7 +102,7 @@ class SentenceParser {
 		else if(~/\b(soldiers|soldier)\b/gi.match(s)){
 			var regex = ~/\b(1|2|3|4|5|6|one|two|three|four|five|six)\b/gi;
 			if(!regex.match(s)){
-				Main.showHint("Try something else.");
+				Main.showHint("Try something else. Between 1 and 6 will do.");
 				return;
 			}
 			var amount = regex.matched(1);

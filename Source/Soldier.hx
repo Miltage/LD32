@@ -10,12 +10,13 @@ import openfl.display.Loader;
 import openfl.events.Event;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
+import openfl.media.Sound;
 
 class Soldier extends Sprite {
 
 	public static inline var HEALTHBAR_WIDTH = 60;
 	
-	public var health:Int = 1;
+	public var health:Int = 10;
 	public var maxHealth:Int = 10;
 	public var alignment:Int;
 	public var lastName:String;
@@ -35,6 +36,11 @@ class Soldier extends Sprite {
 	private var body:MovieClip;
 	private var moving:Bool = false;
 	private var targetPos:Point;
+
+	public var gunFire:Sound;
+	public var gunClick:Sound;
+	public var footstep:Sound;
+	private var footstepCounter:Int = 0;
 
 	public function new(alignment:Int, name:String, x:Int, y:Int){
 		super();
@@ -95,6 +101,10 @@ class Soldier extends Sprite {
 			addChild(body);
 		});
 
+		gunFire = Assets.getSound("assets/rifle.mp3");
+		gunClick = Assets.getSound("assets/gun_click.mp3");
+		footstep = Assets.getSound("assets/footstep.mp3");
+
 	}
 
 	public function update(){
@@ -115,6 +125,9 @@ class Soldier extends Sprite {
 				moving = true;
 				if(body != null && (body.currentFrame < 100 || body.currentFrame > 131))
 					body.gotoAndPlay("walk");
+
+				footstepCounter++;
+				if(footstepCounter%10==0) footstep.play();
 			}
 		}
 
@@ -177,5 +190,6 @@ class Soldier extends Sprite {
 	public function getFrame(){
 		return body.currentFrame;
 	}
+
 
 }

@@ -34,10 +34,12 @@ class ShootCommand extends Command {
 				" He realises there are no bullets in his gun."
 			]);
 			success = false;
+			subject.gunClick.play();
 			return;
 		}
 
 		if(subject.jammed){
+			subject.gunClick.play();
 			Main.transcript += SentenceParser.chooseRandom([
 				" His gun is still jammed, he cannot use it."
 			]);
@@ -87,6 +89,7 @@ class ShootCommand extends Command {
 		}
 		else {
 			subject.jammed = true;
+			subject.gunClick.play();
 			Main.transcript += SentenceParser.chooseRandom([
 				" His gun jams and he is unable to shoot.",
 				" Something is blocking the barrel of his gun.",
@@ -100,6 +103,8 @@ class ShootCommand extends Command {
 		if(!success) return;
 
 		var trail = new Sprite();
+
+		subject.gunFire.play();
 
 		trail.graphics.lineStyle(2, 0xffffff);
 		trail.graphics.moveTo(subject.x - 30 + subject.alignment*100 + (subject.inCover?-8:0), subject.y - 5 + (subject.inCover?15:0));
@@ -121,7 +126,7 @@ class ShootCommand extends Command {
 		for(i in 0...5)
 			battle.addBloodPuddle(new BloodPuddle(target.x+30 + Math.random()*20-10, target.y+60 + Math.random()*20-10, Std.int(5+Math.random()*10)));
 
-		if(target.alive) target.gotoAndPlay(156);
+		if(target.alive && !target.inCover) target.gotoAndPlay(156);
 		else{
 			target.gotoAndPlay(209);
 			for(i in 0...5)

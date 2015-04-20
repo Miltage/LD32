@@ -37,9 +37,14 @@ class AI {
 				" An enemy soldier takes refuge behind some cover."
 			]);
 		}
+		else if(Math.random()<0.1){			
+			command = new FlipBirdCommand(subject, target, battle);
+			Main.transcript += "An enemy soldier disrespects the opposition.";
+		}
 		else{
 			command = new ShootCommand(subject, target, battle);
-			if(battle.numAxisAlive() == 1) Main.transcript += "The last remaining enemy soldier";
+			if(battle.numAxisAlive() == 1 && battle.axisSoldiers.length > 1) Main.transcript += "The last remaining enemy soldier";
+			else if(battle.axisSoldiers.length == 1) Main.transcript += "The enemy soldier";
 			else Main.transcript += Math.random()>.5?"An enemy soldier":"One of the enemy soldiers";
 			Main.transcript += " shoots at "+target.lastName+".";
 		}

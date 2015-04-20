@@ -127,7 +127,7 @@ class ShootCommand extends Command {
 			battle.addBloodPuddle(new BloodPuddle(target.x+30 + Math.random()*20-10, target.y+60 + Math.random()*20-10, Std.int(5+Math.random()*10)));
 
 		if(target.alive && !target.inCover) target.gotoAndPlay(156);
-		else{
+		else if(!target.alive){
 			target.gotoAndPlay(209);
 			for(i in 0...5)
 				battle.addBloodPuddle(new BloodPuddle(target.x+30 + Math.random()*20-10 - 50 + 100*target.alignment, target.y+60 + Math.random()*20-10, Std.int(10+Math.random()*10), 25));
